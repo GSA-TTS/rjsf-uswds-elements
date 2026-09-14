@@ -1,0 +1,9 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "rootDir": ".",
+    "types": ["vitest/globals", "@testing-library/jest-dom/vitest"]
+  },
+  "include": ["src", "tests"]
+}

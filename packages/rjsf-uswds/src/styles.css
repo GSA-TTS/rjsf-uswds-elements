@@ -1,0 +1,67 @@
+/*
+ * rjsf-uswds glue styles.
+ *
+ * These cover only the small presentation gaps between RJSF's structure and
+ * USWDS (repeatable-item framing, toolbar layout). All control styling comes
+ * from USWDS itself — consuming applications must also load the USWDS CSS.
+ */
+
+/* Repeated array entries: a light left rule distinguishes entries without
+   heavy card UI. */
+.rjsf-uswds-array-item {
+  border-left: 4px solid #dfe1e2; /* base-lighter */
+  padding-left: 1rem;
+  margin-top: 1rem;
+}
+
+.rjsf-uswds-array-item__toolbar {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+}
+
+/* Scalar array entries render as a compact control + actions row. */
+.rjsf-uswds-array-item--inline {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.rjsf-uswds-array-item--inline .rjsf-uswds-array-item__content {
+  flex: 1 1 auto;
+}
+
+.rjsf-uswds-array-item--inline .rjsf-uswds-array-item__toolbar {
+  flex: 0 0 auto;
+  margin-bottom: 0.25rem;
+}
+
+/* usa-form gives submit buttons a top margin; array/item action buttons
+   should sit closer to their content. */
+.usa-form .rjsf-uswds-array-item__toolbar .usa-button {
+  margin-top: 0;
+}
+
+/* Nested sections: indent nested titled objects slightly for hierarchy
+   without stacking boxes. */
+.rjsf-uswds-object--root > .usa-legend--large {
+  margin-bottom: 0.5rem;
+}
+
+/* additionalProperties rows: key input, value, remove control. */
+.rjsf-uswds-additional-property {
+  display: flex;
+  align-items: flex-end;
+  gap: 1rem;
+}
+
+.rjsf-uswds-additional-property__key,
+.rjsf-uswds-additional-property__value {
+  flex: 1 1 50%;
+}
+
+/* The error summary list reads better without list-style indent inside the
+   alert body. */
+.rjsf-uswds-error-list ul.usa-list {
+  margin-top: 0.5rem;
+}

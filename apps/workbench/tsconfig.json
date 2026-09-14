@@ -1,0 +1,11 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": "../..",
+    "paths": {
+      "rjsf-uswds": ["../../packages/rjsf-uswds/src/index.ts"],
+      "rjsf-uswds/styles.css": ["../../packages/rjsf-uswds/src/styles.css"]
+    }
+  },
+  "include": ["src", "../../packages/rjsf-uswds/src"]
+}

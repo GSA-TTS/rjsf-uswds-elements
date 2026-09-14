@@ -1,0 +1,323 @@
+/* Workbench layout styles. These style the tool around the preview; the
+   rendered forms themselves are styled entirely by USWDS. */
+
+:root {
+  --wb-border: #dfe1e2;
+  --wb-ink: #1b1b1b;
+  --wb-muted: #565c65;
+  --wb-accent: #005ea2;
+  --wb-bg: #f9f9f7;
+  /* USWDS font stacks — the loaded @font-face families are "Source Sans Pro
+     Web" and "Merriweather Web" (not the bare names). */
+  --wb-font-ui: 'Source Sans Pro Web', 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;
+  --wb-font-heading: 'Merriweather Web', Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  color: var(--wb-ink);
+  background: var(--wb-bg);
+}
+
+.wb-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.wb-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: #162e51;
+  color: #fff;
+}
+
+.wb-header__title {
+  font-family: var(--wb-font-ui);
+  font-size: 1.13rem; /* USWDS type scale: sans md */
+  font-weight: 700;
+  margin: 0;
+}
+
+.wb-header__nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.wb-header__tab {
+  font: inherit;
+  color: #fff;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 4px;
+  padding: 0.35rem 0.9rem;
+  cursor: pointer;
+}
+
+.wb-header__tab[aria-pressed='true'] {
+  background: #fff;
+  color: #162e51;
+  border-color: #fff;
+}
+
+.wb-header__tab:focus-visible {
+  outline: 0.25rem solid #ffbe2e;
+  outline-offset: 0;
+}
+
+.wb-main {
+  flex: 1;
+  padding: 1.5rem;
+}
+
+/* Playground: config column, drag divider, preview column. The config
+   width is driven by the divider via the --wb-config-width property. */
+.wb-playground {
+  display: grid;
+  grid-template-columns: var(--wb-config-width, 30rem) 0.75rem minmax(0, 1fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+/* While dragging, keep text from being selected under the pointer. */
+.wb-playground--dragging {
+  user-select: none;
+  cursor: col-resize;
+}
+
+.wb-divider {
+  align-self: stretch;
+  cursor: col-resize;
+  border-radius: 4px;
+  position: relative;
+  touch-action: none;
+}
+
+.wb-divider::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  width: 3px;
+  transform: translateX(-50%);
+  border-radius: 3px;
+  background: var(--wb-border);
+}
+
+.wb-divider:hover::before,
+.wb-playground--dragging .wb-divider::before {
+  background: var(--wb-accent);
+}
+
+.wb-divider:focus-visible {
+  outline: 0.25rem solid #ffbe2e;
+  outline-offset: 2px;
+}
+
+@media (max-width: 64em) {
+  .wb-playground {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wb-divider {
+    display: none;
+  }
+}
+
+.wb-config {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.wb-config__row {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  padding: 1rem;
+}
+
+.wb-config__label {
+  margin-top: 0;
+}
+
+.wb-config__row .usa-select {
+  max-width: none;
+}
+
+.wb-config__description {
+  color: var(--wb-muted);
+  font-size: 0.9rem;
+  margin: 0.75rem 0 0;
+}
+
+.wb-config__reset {
+  margin-top: 0.75rem;
+}
+
+/* Editors */
+.wb-editor {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.wb-editor__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--wb-border);
+}
+
+.wb-editor__label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.wb-editor__status {
+  color: #b50909;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.wb-editor__codemirror .cm-editor {
+  max-height: 20rem;
+  font-size: 0.85rem;
+}
+
+.wb-editor__codemirror .cm-scroller {
+  overflow: auto;
+}
+
+.wb-editor__error {
+  margin: 0;
+  padding: 0.5rem 1rem;
+  background: #f4e3db;
+  color: #6f3331;
+  font-size: 0.85rem;
+}
+
+/* Preview */
+.wb-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.wb-preview__states {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  padding: 0.75rem 1rem 1rem;
+}
+
+/* Let usa-legend keep its USWDS typesetting; only remove the top margin
+   that assumes a form context rather than a padded panel. */
+.wb-preview__states .usa-legend {
+  margin-top: 0;
+}
+
+.wb-preview__state-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 1.5rem;
+}
+
+.wb-preview__form {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  padding: 1.5rem 2rem 2rem;
+}
+
+/* Let the previewed form breathe a little wider than usa-form--large's
+   default cap so complex forms are comfortable to inspect. */
+.wb-preview__form .usa-form {
+  max-width: 36rem;
+}
+
+.wb-preview__data {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  padding: 1rem 1.5rem;
+}
+
+.wb-preview__data-heading {
+  margin: 0.5rem 0;
+}
+
+.wb-preview__data-block {
+  background: #f0f0f0;
+  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  overflow: auto;
+  max-height: 20rem;
+  margin: 0 0 0.5rem;
+}
+
+/* Component gallery */
+.wb-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 90rem;
+}
+
+/* USWDS h2 treatment (typesetting tokens: heading family, size xl, lh 1.2). */
+.wb-gallery__section-title {
+  font-family: var(--wb-font-heading);
+  font-size: 1.95rem;
+  line-height: 1.2;
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.wb-gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+  gap: 1rem;
+}
+
+.wb-gallery__item {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  padding: 1rem 1.25rem 1.25rem;
+}
+
+/* Small caption headings use USWDS's h6 treatment from the typesetting
+   scale (sans 3xs, uppercase, 0.025em tracking, normal weight) rather than
+   ad-hoc sizes. */
+.wb-gallery__item-title,
+.wb-preview__data-heading {
+  font-family: var(--wb-font-ui);
+  font-size: 0.87rem;
+  line-height: 1.1;
+  font-weight: normal;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: var(--wb-muted);
+}
+
+.wb-gallery__item-title {
+  margin: 0 0 0.5rem;
+}
+
+/* Gallery forms: suppress the usa-form width cap inside cards. */
+.wb-gallery__item .usa-form {
+  max-width: none;
+}
