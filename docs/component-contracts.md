@@ -60,3 +60,27 @@ Accessibility contract: the marker uses `abbr[title="required"]`, matching the U
 USWDS pattern reference: form labels and required field indicators.
 
 Upstreaming note: this is intentionally tiny and low-risk. It is useful mainly as the first proof that the RJSF theme can consume Web Components while preserving existing accessibility tests and global USWDS styling.
+
+### `uswds-error-message`
+
+Purpose: render a field-level USWDS error message.
+
+Markup contract:
+
+```html
+<span id="field-id__error" class="usa-error-message">Enter a value.</span>
+```
+
+Attributes: none on the Web Component. Consumers may put field association attributes, such as `id`, on an ancestor or on the inner `.usa-error-message` fallback element. The RJSF adapter keeps `aria-describedby` pointed at RJSF's existing field-error container and renders this component inside it.
+
+Properties: none.
+
+Slots: none. If plain text children are provided, the component wraps them in a `span.usa-error-message` in light DOM. If a `.usa-error-message` child already exists, the component preserves it.
+
+Events: none.
+
+Accessibility contract: field controls continue to reference the field-error container via `aria-describedby`, and invalid controls continue to set `aria-invalid="true"` through the RJSF adapter.
+
+USWDS pattern reference: form error messages.
+
+Upstreaming note: this remains a narrow presentational wrapper so the RJSF adapter can adopt Web Components incrementally without changing validation behavior or field-error associations.

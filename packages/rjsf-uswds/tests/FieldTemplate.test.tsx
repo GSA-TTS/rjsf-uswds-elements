@@ -60,7 +60,9 @@ describe('FieldTemplate', () => {
     expect(input.closest('.usa-form-group')).toHaveClass('usa-form-group--error');
     const error = document.getElementById('root_name__error');
     expect(error).not.toBeNull();
-    expect(error!.querySelector('.usa-error-message')).toHaveTextContent('Enter a project name.');
+    const errorMessage = error!.querySelector('uswds-error-message .usa-error-message');
+    expect(errorMessage).not.toBeNull();
+    expect(errorMessage).toHaveTextContent('Enter a project name.');
     expect(input.getAttribute('aria-describedby')).toContain('root_name__error');
     expect(input).toHaveAttribute('aria-invalid', 'true');
   });
