@@ -1,5 +1,6 @@
 import CodeMirror from '@uiw/react-codemirror';
 import { json } from '@codemirror/lang-json';
+import { EditorView, ViewPlugin } from '@codemirror/view';
 
 interface JsonEditorProps {
   label: string;
@@ -7,6 +8,22 @@ interface JsonEditorProps {
   onChange: (value: string) => void;
   parseError?: string;
   editorId: string;
+}
+
+const focusableScroller = ViewPlugin.fromClass(
+  class {
+    constructor(view: EditorView) {
+      view.scrollDOM.tabIndex = 0;
+    }
+  },
+);
+
+export function jsonEditorAccessibilityExtensions(labelId: string) {
+  return [
+    EditorView.contentAttributes.of({ 'aria-labelledby': labelId }),
+    EditorView.editorAttributes.of({ 'aria-labelledby': labelId }),
+    focusableScroller,
+  ];
 }
 
 /** A labeled CodeMirror JSON editor with inline parse-error reporting. */
@@ -28,7 +45,7 @@ export default function JsonEditor({
       <CodeMirror
         value={value}
         onChange={onChange}
-        extensions={[json()]}
+        extensions={[json(), ...jsonEditorAccessibilityExtensions(`${editorId}-label`)]}
         basicSetup={{ foldGutter: true, lineNumbers: true, highlightActiveLine: false }}
         aria-labelledby={`${editorId}-label`}
         className="wb-editor__codemirror"
