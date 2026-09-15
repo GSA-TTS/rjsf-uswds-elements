@@ -51,9 +51,11 @@ export interface ErrorMessageProps {
 /** `usa-error-message` span. */
 export function ErrorMessage({ id, children }: ErrorMessageProps) {
   return (
-    <span className="usa-error-message" id={id}>
-      {children}
-    </span>
+    <uswds-error-message>
+      <span className="usa-error-message" id={id}>
+        {children}
+      </span>
+    </uswds-error-message>
   );
 }
 
