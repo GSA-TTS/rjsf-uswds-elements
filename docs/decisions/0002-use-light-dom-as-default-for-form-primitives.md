@@ -1,0 +1,62 @@
+---
+title: 'Use light DOM as default for form primitives'
+status: 'proposed'
+date: '2026-09-16'
+decision_makers: ['PIC engineering stakeholders']
+category: 'Input Validation and Output Handling'
+nist_controls: ['SA-11', 'SI-10']
+impact_level: 'moderate'
+ato_relevance: 'no'
+risk_treatment: 'mitigate'
+---
+
+# Use light DOM as default for form primitives
+
+## Context and Problem Statement
+
+USWDS form primitives need to preserve browser form semantics, USWDS styling, and accessibility relationships such as labels, required indicators, hints, errors, and `aria-describedby`. Shadow DOM with component-scoped styles is promising, but early spikes showed unresolved build, browser, and assistive-technology validation questions for RJSF-composed form fields.
+
+## Decision Drivers
+
+- USWDS styles are currently global, class-based CSS that naturally applies to light DOM.
+- RJSF composes a field from separate templates and widgets, so labels, hints, errors, and controls may not be owned by one Web Component.
+- Field accessibility relationships must remain inspectable and testable.
+- Shadow DOM should not be adopted for form semantics before browser and assistive-technology behavior is validated.
+- Incremental migration should preserve current behavior after each component slice.
+
+## Considered Options
+
+1. **Use light DOM as the default for form primitives** — Render USWDS-compatible fallback markup in light DOM and wrap it with small Web Components where useful.
+2. **Use shadow DOM for all Web Components immediately** — Move component internals into shadow roots and inject/adopt the needed USWDS styles.
+3. **Use no Web Components for form primitives** — Keep all form markup directly in React/RJSF templates.
+4. **Use a hybrid rule** — Default to light DOM for form primitives, but allow shadow DOM for self-contained components or future components with validated styling and accessibility contracts.
+
+## Decision Outcome
+
+Chosen option: **Use a hybrid rule with light DOM as the default for form primitives**, because it preserves known-good USWDS styling and accessibility relationships while leaving room for shadow DOM where the component owns its semantics or where follow-up validation proves the pattern safe.
+
+### Positive Consequences
+
+- Existing `aria-describedby`, label, error, and required-marker behavior remains transparent.
+- Global USWDS CSS continues to apply without duplicating CSS into every component.
+- Each migrated element can remain a small, reviewable increment.
+- Shadow DOM remains available for future components after build and accessibility questions are resolved.
+
+### Negative Consequences
+
+- Components are less encapsulated from page-level CSS than they would be in shadow DOM.
+- Consumers must continue loading USWDS CSS globally for production rendering.
+- Some later components may need to be revisited if the project adopts a shadow-DOM build path.
+
+### Compliance Consequences
+
+- Accessibility verification remains central for every migrated component.
+- Future shadow-DOM conversions must include browser-backed and assistive-technology review evidence where field semantics are affected.
+- This decision reduces near-term behavioral risk while the package build and CSS strategy are still evolving.
+
+## Links
+
+- Parent work: https://github.com/GSA-TTS/pic-blm-cxworks/issues/969
+- Shadow DOM styling spike: https://github.com/GSA-TTS/pic-blm-cxworks/issues/1144
+- Shadow DOM spike PR: https://github.com/GSA-TTS/rjsf-uswds-elements/pull/2
+- Component contracts: ../component-contracts.md

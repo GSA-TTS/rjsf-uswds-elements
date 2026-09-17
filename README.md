@@ -85,6 +85,10 @@ External package versions are pinned in this repository to keep review and CI be
 
 Form elements render in light DOM unless there is a specific reason not to. This matches the current need for global USWDS CSS, straightforward form semantics, and inspectable markup.
 
+`packages/uswds-form-elements` uses a Vite library build so future Lit components can import package-scoped `*.css?inline` or `*.scss?inline` strings when shadow DOM styling is appropriate. The package still emits TypeScript declarations with `tsc --emitDeclarationOnly`, and current production form primitives remain light DOM until follow-up accessibility validation proves a shadow DOM variant preserves labels, descriptions, errors, form behavior, and keyboard behavior.
+
+The Vite Sass configuration resolves USWDS package Sass from `node_modules/@uswds/uswds/packages` and the package root so imports such as `@use "usa-error-message";` match USWDS package boundaries. Inline USWDS Sass may include `@font-face` URLs; Vite leaves unresolved relative font URLs in the emitted CSS string for the consuming application to serve or rewrite.
+
 Each Web Component should document:
 
 - tag name;

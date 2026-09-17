@@ -20,11 +20,14 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "vite build && tsc -p tsconfig.build.json --emitDeclarationOnly",
     "typecheck": "tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
     "lit": "3.3.3"
+  },
+  "devDependencies": {
+    "@uswds/uswds": "3.13.0"
   },
   "peerDependencies": {
     "@uswds/uswds": ">=3 <4"
