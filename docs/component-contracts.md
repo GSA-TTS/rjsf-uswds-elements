@@ -27,7 +27,9 @@ Form components render in light DOM by default. This is intentional because:
 - browser form semantics, labels, and accessibility relationships are easier to verify;
 - upstream review is easier when the emitted USWDS markup is visible.
 
-Use shadow DOM only when encapsulation is more important than native USWDS CSS inheritance, and document the required CSS custom properties, parts, slots, and accessibility implications.
+Use shadow DOM only when encapsulation is more important than native USWDS CSS inheritance, and document the required CSS custom properties, parts, slots, and accessibility implications. The package build supports `*.css?inline` and `*.scss?inline` imports for that future work, but existing production form primitives remain light DOM until separate accessibility validation proves any shadow DOM component preserves native form labeling, descriptions, errors, and keyboard behavior.
+
+The package Vite config resolves USWDS Sass through `node_modules/@uswds/uswds/packages` and the USWDS package root. Inline USWDS Sass can emit `@font-face` rules with relative font URLs; consumers are responsible for serving or rewriting those assets if a future component inlines styles that reference them.
 
 ## React/RJSF Boundary
 
