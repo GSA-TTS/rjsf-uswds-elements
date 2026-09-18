@@ -90,10 +90,14 @@ describe('permitting-style form integration', () => {
     });
     expect(onSubmit).not.toHaveBeenCalled();
 
-    const alert = document.querySelector<HTMLElement>('.rjsf-uswds-error-list')!;
-    expect(alert).toHaveClass('usa-alert--error');
+    const alert = document.querySelector<HTMLElement>('uswds-alert.rjsf-uswds-error-list')!;
+    await (alert as HTMLElement & { updateComplete: Promise<unknown> }).updateComplete;
+    expect(screen.getByRole('alert')).toBe(alert);
+    expect(alert).toHaveAttribute('type', 'error');
     expect(alert).toHaveAttribute('role', 'alert');
-    expect(alert).toHaveTextContent('This form has 3 errors');
+    expect(alert.shadowRoot).toBeNull();
+    expect(alert).toHaveClass('usa-alert', 'usa-alert--error');
+    expect(alert.querySelector('.usa-alert__heading')).toHaveTextContent('This form has 3 errors');
 
     const links = Array.from(alert.querySelectorAll('a')).map((a) => a.getAttribute('href'));
     expect(links).toContain('#root_projectName');
