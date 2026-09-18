@@ -321,3 +321,22 @@ body {
 .wb-gallery__item .usa-form {
   max-width: none;
 }
+
+/* Shadow DOM accessibility spike */
+.wb-spike {
+  display: grid;
+  gap: 1rem;
+  max-width: 48rem;
+}
+
+.wb-spike__intro,
+.wb-spike__fixture {
+  background: #fff;
+  border: 1px solid var(--wb-border);
+  border-radius: 6px;
+  padding: 1rem 1.5rem 1.5rem;
+}
+
+.wb-spike__fixture h3 {
+  margin-top: 0;
+}
