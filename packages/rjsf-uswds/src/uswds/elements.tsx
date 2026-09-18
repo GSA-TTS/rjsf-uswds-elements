@@ -132,20 +132,20 @@ export function Button({ variant = 'primary', className, type = 'button', ...res
 }
 
 export interface ErrorAlertProps {
-  heading: ReactNode;
+  heading: string;
   className?: string;
   children: ReactNode;
 }
 
-/** A USWDS error alert (`usa-alert usa-alert--error`) announced via role=alert. */
+/** A USWDS error alert custom element announced via role=alert. */
 export function ErrorAlert({ heading, className, children }: ErrorAlertProps) {
   return (
-    <div className={classNames('usa-alert', 'usa-alert--error', className)} role="alert">
+    <uswds-alert type="error" role="alert" className={className}>
       <div className="usa-alert__body">
         <h2 className="usa-alert__heading">{heading}</h2>
         {children}
       </div>
-    </div>
+    </uswds-alert>
   );
 }
 

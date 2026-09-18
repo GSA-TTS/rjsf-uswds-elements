@@ -41,6 +41,46 @@ React 19 is the baseline for direct custom-element interop. If React 18 support 
 
 ## Current Components
 
+### `uswds-alert`
+
+Purpose: apply USWDS alert host classes while keeping the alert body in light DOM.
+
+Markup contract:
+
+```html
+<uswds-alert type="error">
+  <div class="usa-alert__body">
+    <h2 class="usa-alert__heading">This form has 2 errors</h2>
+    <ul class="usa-list">
+      <li><a class="usa-link" href="#field-id">Field: Enter a value.</a></li>
+    </ul>
+  </div>
+</uswds-alert>
+```
+
+Light DOM contract:
+
+```html
+<uswds-alert class="usa-alert usa-alert--error" type="error" role="alert">
+  <div class="usa-alert__body">
+    <h2 class="usa-alert__heading">This form has 2 errors</h2>
+    <!-- consumer-owned content remains in light DOM -->
+  </div>
+</uswds-alert>
+```
+
+Attributes and properties: `type` (`info`, `warning`, `error`, or `success`, default `info`), `slim`, and `no-icon`.
+
+Slots: none. Consumers own the light-DOM alert body markup.
+
+Events: none.
+
+Accessibility contract: `type="error"` applies `role="alert"` by default. Non-error alerts do not apply an implicit role. Any explicit consumer-provided `role` is preserved.
+
+USWDS pattern reference: alert.
+
+Implementation note: this component intentionally uses light DOM because its first production use is the RJSF form-level error summary. Keeping the heading and linked errors in the same DOM tree preserves USWDS global styling, avoids React child ownership conflicts, and avoids putting dynamic form-error semantics behind a shadow boundary.
+
 ### `uswds-required-marker`
 
 Purpose: render the USWDS required field marker.

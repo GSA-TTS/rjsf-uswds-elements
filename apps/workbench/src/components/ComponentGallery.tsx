@@ -280,6 +280,27 @@ const HIDE_SUBMIT: UiSchema = { 'ui:submitButtonOptions': { norender: true } };
 export default function ComponentGallery() {
   return (
     <div className="wb-gallery">
+      <section className="wb-gallery__section">
+        <h2 className="wb-gallery__section-title">Alert</h2>
+        <div className="wb-gallery__grid">
+          <div className="wb-gallery__item">
+            <h3 className="wb-gallery__item-title">Error summary</h3>
+            <uswds-alert type="error">
+              <div className="usa-alert__body">
+                <h2 className="usa-alert__heading">This form has 2 errors</h2>
+                <ul className="usa-list">
+                  <li>
+                    <a className="usa-link" href="#component-gallery-alert-example">
+                      Project name: Enter a project name.
+                    </a>
+                  </li>
+                  <li>Lead agency: Select a lead agency.</li>
+                </ul>
+              </div>
+            </uswds-alert>
+          </div>
+        </div>
+      </section>
       {SECTIONS.map((section) => (
         <section key={section.title} className="wb-gallery__section">
           <h2 className="wb-gallery__section-title">{section.title}</h2>
