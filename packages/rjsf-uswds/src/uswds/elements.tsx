@@ -115,19 +115,21 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'outline' | 'unstyled';
 }
 
-/** `usa-button`, defaulting to `type="button"`. */
+/** `uswds-button`, defaulting to `type="button"` while preserving native button semantics. */
 export function Button({ variant = 'primary', className, type = 'button', ...rest }: ButtonProps) {
   return (
-    <button
-      {...rest}
-      type={type}
-      className={classNames(
-        'usa-button',
-        variant === 'outline' && 'usa-button--outline',
-        variant === 'unstyled' && 'usa-button--unstyled',
-        className,
-      )}
-    />
+    <uswds-button variant={variant}>
+      <button
+        {...rest}
+        type={type}
+        className={classNames(
+          'usa-button',
+          variant === 'outline' && 'usa-button--outline',
+          variant === 'unstyled' && 'usa-button--unstyled',
+          className,
+        )}
+      />
+    </uswds-button>
   );
 }
 

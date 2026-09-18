@@ -81,6 +81,40 @@ USWDS pattern reference: alert.
 
 Implementation note: this component intentionally uses light DOM because its first production use is the RJSF form-level error summary. Keeping the heading and linked errors in the same DOM tree preserves USWDS global styling, avoids React child ownership conflicts, and avoids putting dynamic form-error semantics behind a shadow boundary.
 
+### `uswds-button`
+
+Purpose: apply USWDS button classes while preserving native button semantics.
+
+Markup contract for React/RJSF usage:
+
+```html
+<uswds-button variant="outline">
+  <button type="button" class="usa-button usa-button--outline">Add item</button>
+</uswds-button>
+```
+
+Markup contract for static/non-framework usage:
+
+```html
+<uswds-button variant="outline">Add item</uswds-button>
+```
+
+Light DOM contract:
+
+- In React/RJSF usage, consumers own the native `<button>` and all behavior-critical attributes and handlers.
+- For static markup without a direct child `<button>`, the component wraps existing child nodes in a native `<button type="button">`.
+- The component applies `usa-button` and variant classes to the host. It also applies those classes to its own generated button, but it does not mutate framework-owned native buttons.
+
+Attributes and properties: `variant` (`primary`, `outline`, or `unstyled`, default `primary`).
+
+Slots: none. Consumers own any child native button in framework usage.
+
+Events: none beyond native button events.
+
+Accessibility contract: RJSF usage keeps submit/click/focus/disabled semantics on the native `<button>` element. The custom element must not move or replace React-owned button children.
+
+USWDS pattern reference: button.
+
 ### `uswds-required-marker`
 
 Purpose: render the USWDS required field marker.
