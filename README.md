@@ -9,8 +9,8 @@ This repository grew from the PIC `apps/uswds-rjsf` proof of concept. It preserv
 - Map RJSF forms to documented USWDS markup and accessibility patterns.
 - Keep runtime dependencies minimal.
 - Hide Lit behind the Web Components package where practical.
-- Use native web platform controls and light DOM so USWDS CSS applies naturally.
-- Keep each Web Component small enough to propose upstream to USWDS Elements independently.
+- Use native web platform controls and preserve form accessibility relationships.
+- Keep each Web Component small enough to review independently and shape for possible contribution to `uswds/uswds`.
 - Make accessibility regressions visible in CI.
 
 ## Repository layout
@@ -53,7 +53,7 @@ Useful scripts:
 
 - `npm run dev` starts the workbench.
 - `npm test` runs unit, integration, and axe tests in Vitest/jsdom.
-- `npm run test:a11y` runs Playwright axe smoke tests against the workbench.
+- `npm run test:a11y` runs Playwright axe smoke tests and the shadow-DOM form accessibility spike against the workbench in Chromium.
 - `npm run build` builds the Web Components package, RJSF package, and workbench.
 - `npm run check` runs formatting, linting, typechecking, tests, build, and workbench accessibility checks.
 
@@ -65,7 +65,8 @@ Accessibility is a release gate for this repository. CI runs:
 - TypeScript checks for each package;
 - unit and integration tests;
 - existing `jest-axe` tests for rendered RJSF forms;
-- Playwright + axe smoke tests for the playground and component gallery;
+- Playwright + axe smoke tests for the playground, component gallery, and shadow-DOM accessibility spike;
+- browser-backed assertions that Chromium does not accept the cross-shadow element-reference topology for form descriptions;
 - package and workbench builds.
 
 The intent is to give contributors a concrete signal when a change breaks behavior or accessibility that was already working.
@@ -83,9 +84,11 @@ External package versions are pinned in this repository to keep review and CI be
 
 ## Web Component Conventions
 
-Form elements render in light DOM unless there is a specific reason not to. This matches the current need for global USWDS CSS, straightforward form semantics, and inspectable markup.
+USWDS now publishes Web Components from the main `uswds/uswds` repository rather than the separate `uswds-elements` repository. The current upstream reference is `usa-banner`, which uses Lit, shadow DOM, a Vite library build, `*.scss?inline` and `*.css?inline` style imports, `:host`, `part`, slots, and CSS custom properties.
 
-`packages/uswds-form-elements` uses a Vite library build so future Lit components can import package-scoped `*.css?inline` or `*.scss?inline` strings when shadow DOM styling is appropriate. The package still emits TypeScript declarations with `tsc --emitDeclarationOnly`, and current production form primitives remain light DOM until follow-up accessibility validation proves a shadow DOM variant preserves labels, descriptions, errors, form behavior, and keyboard behavior.
+`packages/uswds-form-elements` uses a Vite library build so future Lit components can follow that `usa-banner` pattern when shadow DOM styling is appropriate. The package still emits TypeScript declarations with `tsc --emitDeclarationOnly`.
+
+Current production form primitives remain light DOM under ADR-0002 until spike issue #4 validates that a shadow-DOM variant preserves labels, descriptions, errors, form behavior, keyboard behavior, and dynamic error announcements with browser-backed tests and manual assistive-technology evidence.
 
 The Vite Sass configuration resolves USWDS package Sass from `node_modules/@uswds/uswds/packages` and the package root so imports such as `@use "usa-error-message";` match USWDS package boundaries. Inline USWDS Sass may include `@font-face` URLs; Vite leaves unresolved relative font URLs in the emitted CSS string for the consuming application to serve or rewrite.
 
@@ -98,9 +101,9 @@ Each Web Component should document:
 - accessibility contract;
 - USWDS pattern reference;
 - known limitations;
-- upstreaming notes for USWDS Elements.
+- upstreaming notes for possible `uswds/uswds` contribution.
 
-The first migrated component is `uswds-required-marker`, used by the RJSF theme for required field indicators.
+Current migrated components include `uswds-required-marker` and `uswds-error-message`, used by the RJSF theme for required field indicators and field-level error messages.
 
 ## Workbench
 

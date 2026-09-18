@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import PlaygroundView from './components/PlaygroundView';
 import ComponentGallery from './components/ComponentGallery';
+import ShadowDomA11ySpike from './components/ShadowDomA11ySpike';
 
-type View = 'playground' | 'gallery';
+type View = 'playground' | 'gallery' | 'shadow-dom-spike';
 
 export default function App() {
   const [view, setView] = useState<View>('playground');
@@ -28,10 +29,20 @@ export default function App() {
           >
             Component gallery
           </button>
+          <button
+            type="button"
+            className="wb-header__tab"
+            aria-pressed={view === 'shadow-dom-spike'}
+            onClick={() => setView('shadow-dom-spike')}
+          >
+            Shadow DOM a11y spike
+          </button>
         </nav>
       </header>
       <main className="wb-main">
-        {view === 'playground' ? <PlaygroundView /> : <ComponentGallery />}
+        {view === 'playground' ? <PlaygroundView /> : null}
+        {view === 'gallery' ? <ComponentGallery /> : null}
+        {view === 'shadow-dom-spike' ? <ShadowDomA11ySpike /> : null}
       </main>
     </div>
   );
