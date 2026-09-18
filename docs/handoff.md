@@ -4,28 +4,22 @@ This document captures the current state of the local `rjsf-uswds-elements` repo
 
 ## Repository State
 
-Local path:
+Current repository:
 
 ```text
-/Users/bretamogilefsky/Documents/Code/gsa/pic/rjsf-uswds-elements
+https://github.com/GSA-TTS/rjsf-uswds-elements
 ```
 
-Paseo project:
+Current branch for this assessment:
 
 ```text
-prj_7a5d34563295d458  rjsf-uswds-elements
+assess-issue-969-uswds-webcomponents
 ```
 
-Current branch and bootstrap commit:
+Recent merged increments:
 
-```text
-main
-fba3081 feat: bootstrap rjsf uswds elements repo
-```
-
-This handoff document is expected to be committed after the bootstrap commit.
-
-There is no GitHub remote yet. The user will create the GitHub repository later; after that, set the remote and push.
+- PR #1: initial USWDS form element increments.
+- PR #3: Vite library build for `uswds-form-elements`, including inline CSS/Sass build support.
 
 ## Origin and Scope
 
@@ -80,9 +74,11 @@ Important decisions already made:
 
 - Lit is a dependency of `uswds-form-elements`, not a direct dependency of `rjsf-uswds`.
 - React 19 is the baseline for direct custom-element interop.
-- Web Components should render in light DOM by default so USWDS global CSS applies naturally and the emitted USWDS markup remains inspectable.
-- USWDS CSS stays external; consuming apps load `@uswds/uswds` or their compiled USWDS theme.
-- Keep each Web Component small enough to upstream to USWDS Elements independently.
+- USWDS now publishes Web Components from the main `uswds/uswds` repository rather than the abandoned `uswds-elements` repository.
+- The current upstream Web Component reference is `usa-banner`: Lit, shadow DOM, Vite library build, inline package/component CSS, `:host`, `part`, slots, and CSS custom properties.
+- Current production form primitives remain light DOM under ADR-0002 until issue #4 validates cross-boundary form accessibility with browser-backed and manual assistive-technology evidence.
+- USWDS CSS stays external for current light-DOM form primitives; future shadow-DOM components may bundle scoped USWDS Sass/CSS strings.
+- Keep each Web Component small enough to review independently and shape for possible contribution to `uswds/uswds`.
 - Preserve the workbench and cloud.gov deploy path because hosting and visible review affordances are part of the product.
 
 ## Implemented So Far
@@ -137,32 +133,24 @@ Observed results:
 
 `npm run build` emitted a large chunk warning for the workbench JavaScript bundle. This is expected for now because the workbench intentionally preserves CodeMirror and the full playground/gallery functionality.
 
-## Blocked Local Check
+## Playwright Accessibility Checks
 
-`npm run test:a11y` is wired but did not complete locally because the Playwright browser binary was missing and the Chromium install was blocked by network failures to the Playwright CDN.
+`npm run test:a11y` is wired for the workbench and should be run locally by default before accessibility-sensitive work is declared complete.
 
-Commands and observed failures:
-
-```bash
-npm run test:a11y
-```
-
-Failed because Chromium was not installed.
+If the local sandbox is missing Chromium, run:
 
 ```bash
 npx playwright install chromium
 ```
 
-Failed with repeated `ECONNREFUSED` errors to Playwright CDN addresses such as `150.171.109.154:443` and `150.171.109.148:443`.
-
-CI should be able to run this check because `.github/workflows/ci.yml` includes:
+If browser installation or launch is still blocked by the sandbox, record the exact error and use GitHub Actions as the authoritative Playwright environment. `.github/workflows/ci.yml` installs browsers with:
 
 ```yaml
 - name: Install Playwright browsers
   run: npx playwright install --with-deps chromium
 ```
 
-If CI cannot download browsers either, the next agent should decide whether to use a preinstalled browser image, cache Playwright browsers, or document an approved mirror.
+Do not claim `npm run test:a11y` passed locally unless the command actually ran.
 
 ## Dependency Notes
 
@@ -184,33 +172,27 @@ found 0 vulnerabilities
 
 An initial `uswds-label` component was created during exploration but intentionally removed before commit.
 
-Reason: light DOM plus slotted label text is not a safe fit because slots project through shadow DOM. For label-like components, the next agent should choose one of these approaches deliberately:
+Reason: light DOM plus slotted label text is not a safe fit because slots project through shadow DOM. For label-like components, issue #4 should first validate whether shadow-DOM form semantics can preserve label, description, error, focus, and dynamic announcement behavior across browser accessibility trees and real assistive technology.
 
-- keep the native `<label>` in React/RJSF and migrate only nested reusable pieces first;
-- create a light-DOM custom element that accepts label text via property/attribute and owns its internal DOM;
-- use shadow DOM and document styling/accessibility consequences;
-- use a React wrapper for specific components where direct custom-element ergonomics are insufficient.
-
-Do not reintroduce `uswds-label` without testing label association, USWDS CSS application, React 19 rendering behavior, SSR/hydration caveats if relevant, and axe results.
+Do not reintroduce `uswds-label` or convert existing form primitives to shadow DOM until issue #4 records the required evidence.
 
 ## Recommended Next Steps
 
-1. Push this repo after the user creates the GitHub repository.
-2. Open a PR that references `GSA-TTS/pic-blm-cxworks#969`.
-3. Let GitHub Actions run the Playwright a11y smoke in CI.
-4. If CI Playwright passes, decide whether to make a second commit for the next component.
-5. If CI Playwright fails because of browser install/networking, fix CI browser provisioning before adding more features.
-6. Add `custom-elements.json` generation before serious upstreaming to USWDS Elements.
-7. Add component examples/docs for each Web Component as it is introduced.
-8. Continue migration in low-risk order:
+1. Run issue #4 before committing the production form primitives to shadow DOM.
+2. Use ADR-0004 to retarget upstream-facing work from `uswds-elements` to the main `uswds/uswds` repository.
+3. Let GitHub Actions run the Playwright a11y smoke in CI and run `npm run test:a11y` locally when the sandbox supports Playwright Chromium.
+4. If CI Playwright fails because of browser install/networking, fix CI browser provisioning before adding more accessibility-sensitive features.
+5. Add `custom-elements.json` generation before serious upstream contribution work for `uswds/uswds`.
+6. Add component examples/docs for each Web Component as it is introduced.
+7. Continue migration in low-risk order after the rendering-model gate is resolved:
    - required marker: done
-   - error message
+   - error message: done
    - alert
    - button
    - fieldset
    - input group
    - checkbox/radio choice
-   - label only after resolving the design issue above
+   - label only after issue #4 resolves the shadow-DOM form semantics question
 
 ## Review Focus For Next Agent
 

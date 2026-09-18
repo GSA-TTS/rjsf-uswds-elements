@@ -14,7 +14,7 @@ risk_treatment: 'mitigate'
 
 ## Context and Problem Statement
 
-The `uswds-form-elements` package currently builds with TypeScript only. That is enough for light-DOM components, but it cannot transform inline CSS/Sass imports like `*.css?inline` or `*.scss?inline`, which USWDS uses in its Lit `usa-banner` Web Component to provide component-scoped styles inside shadow DOM.
+Before PR #3, the `uswds-form-elements` package built with TypeScript only. That was enough for light-DOM components, but it could not transform inline CSS/Sass imports like `*.css?inline` or `*.scss?inline`, which USWDS uses in its Lit `usa-banner` Web Component to provide component-scoped styles inside shadow DOM.
 
 ## Decision Drivers
 
@@ -39,7 +39,7 @@ Chosen option: **Add a Vite/Rollup library build for `uswds-form-elements` befor
 
 - The package can support future `*.css?inline` and `*.scss?inline` imports.
 - Build behavior can be tested before production components depend on it.
-- The package can follow the same general pattern as USWDS Web Components.
+- The package can follow the same general pattern as Web Components now published from the main `uswds/uswds` repository.
 - Existing light-DOM components can remain behaviorally unchanged while build support is added.
 
 ### Negative Consequences
@@ -60,6 +60,9 @@ Chosen option: **Add a Vite/Rollup library build for `uswds-form-elements` befor
 
 - Parent work: https://github.com/GSA-TTS/pic-blm-cxworks/issues/969
 - Build implementation issue: https://github.com/GSA-TTS/pic-blm-cxworks/issues/1147
+- Build implementation PR: https://github.com/GSA-TTS/rjsf-uswds-elements/pull/3
 - CSS build-path spike: https://github.com/GSA-TTS/pic-blm-cxworks/issues/1146
+- USWDS Web Components direction: https://github.com/uswds/uswds/discussions/6477#discussioncomment-13248225
 - USWDS `usa-banner` source: https://github.com/uswds/uswds/blob/develop/packages/usa-banner/src/usa-banner.component.js
+- ADR-0004: 0004-target-uswds-web-component-conventions-pending-form-accessibility-validation.md
 - `@uswds/compile`: https://github.com/uswds/uswds-compile

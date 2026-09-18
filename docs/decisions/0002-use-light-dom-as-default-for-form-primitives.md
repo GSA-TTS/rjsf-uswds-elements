@@ -1,6 +1,6 @@
 ---
 title: 'Use light DOM as default for form primitives'
-status: 'proposed'
+status: 'amended'
 date: '2026-09-16'
 decision_makers: ['PIC engineering stakeholders']
 category: 'Input Validation and Output Handling'
@@ -54,9 +54,20 @@ Chosen option: **Use a hybrid rule with light DOM as the default for form primit
 - Future shadow-DOM conversions must include browser-backed and assistive-technology review evidence where field semantics are affected.
 - This decision reduces near-term behavioral risk while the package build and CSS strategy are still evolving.
 
+## Revisited by ADR-0004
+
+USWDS maintainers have clarified that future Web Components are being added to the main `uswds/uswds` repository rather than the separate `uswds-elements` repository. The current upstream reference, `usa-banner`, uses Lit with shadow DOM and inline package/component styles.
+
+This changes the upstream alignment pressure, but it does not by itself prove that shadow DOM is safe for RJSF-composed form fields. This ADR remains the current production rule for form primitives until issue #4 validates cross-boundary label, description, error, and dynamic announcement behavior with browser-backed tests and manual assistive-technology evidence.
+
+If issue #4 passes its must-pass assistive-technology matrix, this ADR can be superseded. If it fails, this ADR should remain amended as the form-primitive exception within a broader USWDS-style shadow-DOM direction for self-contained components.
+
 ## Links
 
 - Parent work: https://github.com/GSA-TTS/pic-blm-cxworks/issues/969
 - Shadow DOM styling spike: https://github.com/GSA-TTS/pic-blm-cxworks/issues/1144
 - Shadow DOM spike PR: https://github.com/GSA-TTS/rjsf-uswds-elements/pull/2
+- Form accessibility spike: https://github.com/GSA-TTS/rjsf-uswds-elements/issues/4
+- USWDS Web Components direction: https://github.com/uswds/uswds/discussions/6477#discussioncomment-13248225
+- ADR-0004: 0004-target-uswds-web-component-conventions-pending-form-accessibility-validation.md
 - Component contracts: ../component-contracts.md

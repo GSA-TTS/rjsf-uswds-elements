@@ -37,7 +37,7 @@ Chosen option: **Split adapter and form elements packages**, because it keeps fr
 
 - Consumers of the RJSF adapter do not need to import Lit directly.
 - Web Components can be documented, tested, and reviewed one component at a time.
-- Components that prove generally useful can be proposed upstream or reused outside RJSF.
+- Components that prove generally useful can be shaped for possible upstream proposals to `uswds/uswds` or reused outside RJSF.
 - PIC-specific custom components can remain in application code rather than being forced into the base theme package.
 
 ### Negative Consequences
@@ -56,4 +56,6 @@ Chosen option: **Split adapter and form elements packages**, because it keeps fr
 
 - Parent work: https://github.com/GSA-TTS/pic-blm-cxworks/issues/969
 - Initial implementation PR: https://github.com/GSA-TTS/rjsf-uswds-elements/pull/1
+- USWDS Web Components direction: https://github.com/uswds/uswds/discussions/6477#discussioncomment-13248225
+- ADR-0004: 0004-target-uswds-web-component-conventions-pending-form-accessibility-validation.md
 - Component contracts: ../component-contracts.md

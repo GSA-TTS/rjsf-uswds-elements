@@ -2,7 +2,7 @@
 
 This repository uses Lit-based Web Components as the reusable USWDS form layer beneath the React/RJSF adapter.
 
-Each component should be small enough to review independently and eventually propose to USWDS Elements as its own pull request.
+Each component should be small enough to review independently and shape for possible contribution to the main `uswds/uswds` repository.
 
 ## Shared Expectations
 
@@ -20,16 +20,18 @@ Components should prefer native HTML controls and platform behavior. Custom keyb
 
 ## Rendering Model
 
-Form components render in light DOM by default. This is intentional because:
+USWDS now publishes Web Components from the main `uswds/uswds` repository rather than the separate `uswds-elements` repository. The current upstream reference is `usa-banner`, which uses Lit, shadow DOM, a Vite library build, `*.scss?inline` and `*.css?inline` style imports, `:host`, `part`, slots, and CSS custom properties.
 
-- USWDS styles are global class-based CSS;
-- RJSF and consuming apps need inspectable form markup;
-- browser form semantics, labels, and accessibility relationships are easier to verify;
-- upstream review is easier when the emitted USWDS markup is visible.
+For self-contained components where the component owns its semantics, prefer the `usa-banner` shadow-DOM house style unless a specific accessibility, styling, or consumer-integration constraint prevents it.
 
-Use shadow DOM only when encapsulation is more important than native USWDS CSS inheritance, and document the required CSS custom properties, parts, slots, and accessibility implications. The package build supports `*.css?inline` and `*.scss?inline` imports for that future work, but existing production form primitives remain light DOM until separate accessibility validation proves any shadow DOM component preserves native form labeling, descriptions, errors, and keyboard behavior.
+Current production form primitives remain light DOM under ADR-0002 because:
 
-The package Vite config resolves USWDS Sass through `node_modules/@uswds/uswds/packages` and the USWDS package root. Inline USWDS Sass can emit `@font-face` rules with relative font URLs; consumers are responsible for serving or rewriting those assets if a future component inlines styles that reference them.
+- RJSF composes labels, hints, errors, and controls from separate templates and widgets;
+- classic `aria-describedby`, `aria-labelledby`, and label `for` references do not reliably cross shadow-root boundaries;
+- browser form semantics, labels, and accessibility relationships are easier to verify in the same DOM tree;
+- issue #4 must validate browser and assistive-technology behavior before production form primitives move to shadow DOM.
+
+The package build supports `*.css?inline` and `*.scss?inline` imports for future shadow-DOM work. The package Vite config resolves USWDS Sass through `node_modules/@uswds/uswds/packages` and the USWDS package root. Inline USWDS Sass can emit `@font-face` rules with relative font URLs; consumers are responsible for serving or rewriting those assets if a future component inlines styles that reference them.
 
 ## React/RJSF Boundary
 
@@ -61,7 +63,7 @@ Accessibility contract: the marker uses `abbr[title="required"]`, matching the U
 
 USWDS pattern reference: form labels and required field indicators.
 
-Upstreaming note: this is intentionally tiny and low-risk. It is useful mainly as the first proof that the RJSF theme can consume Web Components while preserving existing accessibility tests and global USWDS styling.
+Upstreaming note: this is intentionally tiny and low-risk. It is useful mainly as the first proof that the RJSF theme can consume Web Components while preserving existing accessibility tests and global USWDS styling. Any future shadow-DOM version should wait for issue #4.
 
 ### `uswds-error-message`
 
@@ -85,4 +87,4 @@ Accessibility contract: field controls continue to reference the field-error con
 
 USWDS pattern reference: form error messages.
 
-Upstreaming note: this remains a narrow presentational wrapper so the RJSF adapter can adopt Web Components incrementally without changing validation behavior or field-error associations.
+Upstreaming note: this remains a narrow presentational wrapper so the RJSF adapter can adopt Web Components incrementally without changing validation behavior or field-error associations. Any future shadow-DOM version should wait for issue #4 because error descriptions are central to the cross-boundary accessibility question.
