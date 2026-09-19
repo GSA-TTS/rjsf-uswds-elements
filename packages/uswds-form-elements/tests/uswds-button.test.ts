@@ -83,6 +83,28 @@ describe('uswds-button', () => {
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
+  it('resets the containing form without submitting', async () => {
+    const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault());
+    document.body.innerHTML = `
+      <form>
+        <input name="project" value="Default project" />
+        <uswds-button type="reset">Reset</uswds-button>
+      </form>
+    `;
+
+    const form = document.querySelector('form')!;
+    const input = document.querySelector('input')!;
+    const element = document.querySelector('uswds-button')!;
+    form.addEventListener('submit', onSubmit);
+    await updateComplete(element);
+
+    input.value = 'Changed project';
+    element.shadowRoot!.querySelector('button')!.click();
+
+    expect(input.value).toBe('Default project');
+    expect(onSubmit).not.toHaveBeenCalled();
+  });
+
   it('does not submit when disabled', async () => {
     const onSubmit = vi.fn((event: SubmitEvent) => event.preventDefault());
     document.body.innerHTML = `

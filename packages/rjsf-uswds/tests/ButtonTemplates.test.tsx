@@ -32,6 +32,37 @@ describe('ButtonTemplates', () => {
     expect(button.shadowRoot!.querySelector('button')).toHaveClass('usa-button');
   });
 
+  it('forwards submit button props through the custom-element adapter', async () => {
+    renderForm(
+      {
+        type: 'object',
+        properties: { name: { type: 'string', title: 'Name' } },
+      },
+      {
+        uiSchema: {
+          'ui:submitButtonOptions': {
+            submitText: 'Save',
+            props: {
+              'aria-label': 'Save application',
+              className: 'app-submit',
+              disabled: true,
+              id: 'custom-submit',
+            },
+          },
+        },
+      },
+    );
+
+    const button = document.querySelector('#custom-submit')!;
+    await updateComplete(button);
+
+    expect(button).toHaveClass('app-submit');
+    expect(button).toHaveAttribute('button-label', 'Save application');
+    expect(button).not.toHaveAttribute('aria-label');
+    expect(button.shadowRoot!.querySelector('button')).toBeDisabled();
+    expect(button.shadowRoot!.querySelector('button')).toHaveAccessibleName('Save application');
+  });
+
   it('submits the RJSF form exactly once through the custom element bridge', async () => {
     const user = userEvent.setup();
     const onSubmit = vi.fn();
