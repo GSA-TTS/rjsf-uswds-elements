@@ -50,7 +50,11 @@ For self-contained components where the component owns its semantics, future wor
 - `:host`, `part`, slots, and CSS custom properties for styling hooks.
 - Small public APIs that are practical to document and review.
 
+Web Components should own the USWDS pattern markup they represent. The React/RJSF adapter should translate RJSF state into custom-element attributes, properties, slots, and events; it should not continue to author a component's internal USWDS structure and then wrap it in a custom-element host. A wrapper-only element that leaves consumers responsible for internal classes such as `usa-alert__body`, `usa-alert__heading`, or `usa-button` is not a successful migration to this architecture.
+
 For RJSF form primitives, ADR-0002 remains in force until spike issue #4 records browser and assistive-technology evidence. The project must not convert production label, hint, error, required-marker, or control semantics to shadow DOM until that spike demonstrates that accessible names, descriptions, invalid state, focus behavior, and dynamic error announcements remain correct.
+
+The form accessibility spike in PR #5 specifically rejects split form-field semantics across shadow boundaries: a light-DOM control could not reliably consume shadow-root hint/error description elements through classic IDREFs or `ariaDescribedByElements` in Chromium. That result does not prohibit self-contained components, such as alerts, from using shadow DOM when their public API keeps interactive and semantic content reachable through normal slots. Components with native form participation risk, such as buttons, need targeted form-behavior validation before production use.
 
 ## Accessibility Validation Gate
 

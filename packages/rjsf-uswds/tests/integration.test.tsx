@@ -95,14 +95,29 @@ describe('permitting-style form integration', () => {
     expect(screen.getByRole('alert')).toBe(alert);
     expect(alert).toHaveAttribute('type', 'error');
     expect(alert).toHaveAttribute('role', 'alert');
-    expect(alert.shadowRoot).toBeNull();
-    expect(alert).toHaveClass('usa-alert', 'usa-alert--error');
-    expect(alert.querySelector('.usa-alert__heading')).toHaveTextContent('This form has 3 errors');
+    expect(alert).toHaveAttribute('heading', 'This form has 3 errors');
+    expect(alert.shadowRoot).not.toBeNull();
+    expect(alert.querySelector('.usa-alert__body')).toBeNull();
+    expect(alert.querySelector('.usa-alert__heading')).toBeNull();
+    expect(alert.shadowRoot!.querySelector('[part="alert"]')).toHaveClass(
+      'usa-alert',
+      'usa-alert--error',
+    );
+    expect(alert.shadowRoot!.querySelector('[part="heading"]')).toHaveTextContent(
+      'This form has 3 errors',
+    );
 
     const links = Array.from(alert.querySelectorAll('a')).map((a) => a.getAttribute('href'));
     expect(links).toContain('#root_projectName');
     expect(links).toContain('#root_projectType');
     expect(links).toContain('#root_applicant_email');
+
+    alert.querySelector<HTMLAnchorElement>('a[href="#root_projectName"]')!.click();
+    expect(document.activeElement).toBe(document.querySelector('#root_projectName'));
+    alert.querySelector<HTMLAnchorElement>('a[href="#root_projectType"]')!.click();
+    expect(document.activeElement).toBe(document.querySelector('#root_projectType-0'));
+    alert.querySelector<HTMLAnchorElement>('a[href="#root_applicant_email"]')!.click();
+    expect(document.activeElement).toBe(document.querySelector('#root_applicant_email'));
 
     // Field-level error is rendered and associated.
     const emailInput = screen.getByLabelText(/Email address/);
