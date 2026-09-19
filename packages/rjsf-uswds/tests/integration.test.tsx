@@ -112,6 +112,13 @@ describe('permitting-style form integration', () => {
     expect(links).toContain('#root_projectType');
     expect(links).toContain('#root_applicant_email');
 
+    alert.querySelector<HTMLAnchorElement>('a[href="#root_projectName"]')!.click();
+    expect(document.activeElement).toBe(document.querySelector('#root_projectName'));
+    alert.querySelector<HTMLAnchorElement>('a[href="#root_projectType"]')!.click();
+    expect(document.activeElement).toBe(document.querySelector('#root_projectType-0'));
+    alert.querySelector<HTMLAnchorElement>('a[href="#root_applicant_email"]')!.click();
+    expect(document.activeElement).toBe(document.querySelector('#root_applicant_email'));
+
     // Field-level error is rendered and associated.
     const emailInput = screen.getByLabelText(/Email address/);
     expect(emailInput.getAttribute('aria-describedby')).toContain('root_applicant_email__error');
