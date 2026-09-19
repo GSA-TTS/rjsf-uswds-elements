@@ -1,6 +1,7 @@
 import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 type UswdsAlertAttributes = HTMLAttributes<HTMLElement> & {
+  heading?: string;
   'no-icon'?: boolean;
   slim?: boolean;
   type?: 'info' | 'warning' | 'error' | 'success';

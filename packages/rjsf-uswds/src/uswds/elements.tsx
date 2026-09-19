@@ -140,11 +140,8 @@ export interface ErrorAlertProps {
 /** A USWDS error alert custom element announced via role=alert. */
 export function ErrorAlert({ heading, className, children }: ErrorAlertProps) {
   return (
-    <uswds-alert type="error" role="alert" className={className}>
-      <div className="usa-alert__body">
-        <h2 className="usa-alert__heading">{heading}</h2>
-        {children}
-      </div>
+    <uswds-alert type="error" heading={heading} className={className}>
+      {children}
     </uswds-alert>
   );
 }

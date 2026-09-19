@@ -285,18 +285,15 @@ export default function ComponentGallery() {
         <div className="wb-gallery__grid">
           <div className="wb-gallery__item">
             <h3 className="wb-gallery__item-title">Error summary</h3>
-            <uswds-alert type="error">
-              <div className="usa-alert__body">
-                <h2 className="usa-alert__heading">This form has 2 errors</h2>
-                <ul className="usa-list">
-                  <li>
-                    <a className="usa-link" href="#component-gallery-alert-example">
-                      Project name: Enter a project name.
-                    </a>
-                  </li>
-                  <li>Lead agency: Select a lead agency.</li>
-                </ul>
-              </div>
+            <uswds-alert type="error" heading="This form has 2 errors">
+              <ul>
+                <li>
+                  <a href="#component-gallery-alert-example">
+                    Project name: Enter a project name.
+                  </a>
+                </li>
+                <li>Lead agency: Select a lead agency.</li>
+              </ul>
             </uswds-alert>
           </div>
         </div>
