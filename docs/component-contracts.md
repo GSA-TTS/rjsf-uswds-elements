@@ -37,49 +37,48 @@ The package build supports `*.css?inline` and `*.scss?inline` imports for future
 
 `packages/rjsf-uswds` is the React/RJSF adapter. It may import `uswds-form-elements` to define custom elements, but it should not import Lit directly.
 
+The adapter should translate RJSF state into custom-element attributes, properties, slots, and events. It should not continue to author a component's internal USWDS pattern markup and then wrap that markup in a custom-element host. A wrapper-only element that leaves consumers responsible for internal classes such as `usa-alert__body`, `usa-alert__heading`, or `usa-button` is not a successful migration.
+
 React 19 is the baseline for direct custom-element interop. If React 18 support becomes necessary, add an explicit compatibility layer or wrapper entry point with tests rather than widening the peer range without evidence.
 
 ## Current Components
 
 ### `uswds-alert`
 
-Purpose: apply USWDS alert host classes while keeping the alert body in light DOM.
+Purpose: render the USWDS alert pattern behind a custom-element API.
 
 Markup contract:
 
 ```html
-<uswds-alert type="error">
-  <div class="usa-alert__body">
-    <h2 class="usa-alert__heading">This form has 2 errors</h2>
-    <ul class="usa-list">
-      <li><a class="usa-link" href="#field-id">Field: Enter a value.</a></li>
-    </ul>
-  </div>
+<uswds-alert type="error" heading="This form has 2 errors">
+  <ul>
+    <li><a href="#field-id">Field: Enter a value.</a></li>
+  </ul>
 </uswds-alert>
 ```
 
-Light DOM contract:
+Shadow DOM contract:
 
 ```html
-<uswds-alert class="usa-alert usa-alert--error" type="error" role="alert">
-  <div class="usa-alert__body">
-    <h2 class="usa-alert__heading">This form has 2 errors</h2>
-    <!-- consumer-owned content remains in light DOM -->
+<div class="usa-alert usa-alert--error" part="alert">
+  <div class="usa-alert__body" part="body">
+    <h2 class="usa-alert__heading" part="heading">This form has 2 errors</h2>
+    <slot></slot>
   </div>
-</uswds-alert>
+</div>
 ```
 
-Attributes and properties: `type` (`info`, `warning`, `error`, or `success`, default `info`), `slim`, and `no-icon`.
+Attributes and properties: `type` (`info`, `warning`, `error`, or `success`, default `info`), `heading`, `slim`, and `no-icon`.
 
-Slots: none. Consumers own the light-DOM alert body markup.
+Slots: default slot for alert body content.
 
 Events: none.
 
-Accessibility contract: `type="error"` applies `role="alert"` by default. Non-error alerts do not apply an implicit role. Any explicit consumer-provided `role` is preserved.
+Accessibility contract: `type="error"` applies `role="alert"` to the host by default. Non-error alerts do not apply an implicit role. Any explicit consumer-provided `role` is preserved. Interactive slotted content, such as error-summary links, remains in light DOM and remains focusable.
 
 USWDS pattern reference: alert.
 
-Implementation note: this component intentionally uses light DOM because its first production use is the RJSF form-level error summary. Keeping the heading and linked errors in the same DOM tree preserves USWDS global styling, avoids React child ownership conflicts, and avoids putting dynamic form-error semantics behind a shadow boundary.
+Implementation note: this component uses shadow DOM because the alert shell is self-contained. The RJSF adapter owns error data, link targets, and click/focus behavior; the Web Component owns the USWDS alert body and heading structure.
 
 ### `uswds-required-marker`
 
