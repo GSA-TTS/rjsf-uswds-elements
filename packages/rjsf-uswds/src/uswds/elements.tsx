@@ -115,19 +115,25 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'primary' | 'outline' | 'unstyled';
 }
 
-/** `usa-button`, defaulting to `type="button"`. */
-export function Button({ variant = 'primary', className, type = 'button', ...rest }: ButtonProps) {
+/** `uswds-button`, defaulting to `type="button"`. */
+export function Button({
+  variant = 'primary',
+  className,
+  type = 'button',
+  children,
+  'aria-label': ariaLabel,
+  ...rest
+}: ButtonProps) {
   return (
-    <button
+    <uswds-button
       {...rest}
+      button-label={ariaLabel}
       type={type}
-      className={classNames(
-        'usa-button',
-        variant === 'outline' && 'usa-button--outline',
-        variant === 'unstyled' && 'usa-button--unstyled',
-        className,
-      )}
-    />
+      variant={variant}
+      className={className}
+    >
+      {children}
+    </uswds-button>
   );
 }
 

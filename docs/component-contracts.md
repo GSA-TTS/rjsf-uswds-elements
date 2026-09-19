@@ -80,6 +80,37 @@ USWDS pattern reference: alert.
 
 Implementation note: this component uses shadow DOM because the alert shell is self-contained. The RJSF adapter owns error data, link targets, and click/focus behavior; the Web Component owns the USWDS alert body and heading structure.
 
+### `uswds-button`
+
+Purpose: render the USWDS button pattern behind a custom-element API while preserving form behavior.
+
+Markup contract:
+
+```html
+<uswds-button type="submit" variant="primary">Submit</uswds-button>
+<uswds-button type="button" variant="outline">Add item</uswds-button>
+```
+
+Shadow DOM contract:
+
+```html
+<button class="usa-button" part="button" type="button">
+  <slot></slot>
+</button>
+```
+
+Attributes and properties: `type` (`button`, `submit`, or `reset`, default `button`), `variant` (`primary`, `outline`, or `unstyled`, default `primary`), `disabled`, `button-label`, `aria-controls`, `aria-describedby`, `aria-expanded`, `aria-haspopup`, `aria-pressed`, `name`, `title`, and `value`. `button-label` forwards an accessible label to the internal native button without putting prohibited ARIA attributes on the custom-element host.
+
+Slots: default slot for button label/content.
+
+Events: native click events from the internal button are composed through the shadow boundary. `type="submit"` uses `requestSubmit()` on the closest containing form so the custom element can own the native button while still participating in RJSF form submission.
+
+Accessibility contract: focus, keyboard activation, disabled state, and submit/non-submit/reset behavior match native button expectations covered by Playwright tests for the RJSF use case.
+
+Known limitation: this is not a full native submit-button replacement. Because the internal native button lives in shadow DOM and the host is not a form-associated custom element, bridged submissions do not expose a native submitter through `SubmitEvent.submitter`, do not include host `name`/`value` in `FormData`, do not support out-of-tree `form="id"` association, and do not implement alternate submit attributes such as `formaction` or `formmethod`. Those capabilities require a separate design decision before this element is used outside the current RJSF submit/control use cases.
+
+USWDS pattern reference: button.
+
 ### `uswds-required-marker`
 
 Purpose: render the USWDS required field marker.

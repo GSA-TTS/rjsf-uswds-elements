@@ -296,6 +296,27 @@ export default function ComponentGallery() {
           </div>
         </div>
       </section>
+      <section className="wb-gallery__section">
+        <h2 className="wb-gallery__section-title">Button</h2>
+        <div className="wb-gallery__grid">
+          <div className="wb-gallery__item">
+            <h3 className="wb-gallery__item-title">Primary</h3>
+            <uswds-button type="button">Continue</uswds-button>
+          </div>
+          <div className="wb-gallery__item">
+            <h3 className="wb-gallery__item-title">Outline</h3>
+            <uswds-button type="button" variant="outline">
+              Add item
+            </uswds-button>
+          </div>
+          <div className="wb-gallery__item">
+            <h3 className="wb-gallery__item-title">Unstyled</h3>
+            <uswds-button type="button" variant="unstyled">
+              Remove
+            </uswds-button>
+          </div>
+        </div>
+      </section>
       {SECTIONS.map((section) => (
         <section key={section.title} className="wb-gallery__section">
           <h2 className="wb-gallery__section-title">{section.title}</h2>

@@ -51,6 +51,15 @@ const permittingUiSchema: UiSchema = {
   estimatedCost: { 'ui:options': { uswds: { width: 'lg', prefix: '$' } } },
 };
 
+const updateComplete = (element: Element) =>
+  (element as HTMLElement & { updateComplete: Promise<unknown> }).updateComplete;
+
+async function submitForm(user: ReturnType<typeof userEvent.setup>) {
+  const button = document.querySelector('form > uswds-button')!;
+  await updateComplete(button);
+  await user.click(button.shadowRoot!.querySelector('button')!);
+}
+
 describe('permitting-style form integration', () => {
   it('renders the full form coherently through the theme', () => {
     renderForm(permittingSchema, {
@@ -83,7 +92,7 @@ describe('permitting-style form integration', () => {
       formData: { applicant: { email: 'not-an-email' } },
       formProps: { onSubmit },
     });
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await submitForm(user);
 
     await waitFor(() => {
       expect(document.querySelector('.rjsf-uswds-error-list')).not.toBeNull();
@@ -139,7 +148,7 @@ describe('permitting-style form integration', () => {
       },
       formProps: { onSubmit },
     });
-    await user.click(screen.getByRole('button', { name: 'Submit' }));
+    await submitForm(user);
     await waitFor(() => expect(onSubmit).toHaveBeenCalled());
     expect(onSubmit.mock.calls[0][0].formData.projectName).toBe('Riverside Bridge Retrofit');
   });
