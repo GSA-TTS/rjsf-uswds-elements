@@ -18,6 +18,8 @@ describe('uswds-button', () => {
     expect(button).toHaveClass('usa-button', 'usa-button--outline');
     expect(button).toHaveAttribute('type', 'button');
     expect(element).toHaveTextContent('Continue');
+    expect(button).not.toHaveAttribute('aria-label');
+    expect(button).toHaveAccessibleName('Continue');
     expect(button.querySelector('slot')).not.toBeNull();
   });
 
@@ -35,16 +37,36 @@ describe('uswds-button', () => {
     expect(button).toHaveAttribute('type', 'button');
   });
 
-  it('forwards button-label to the internal native button', async () => {
+  it('forwards supported accessible attributes to the internal native button', async () => {
     document.body.innerHTML = `
-      <uswds-button button-label="Remove contact 1">Remove</uswds-button>
+      <p id="details">Deletes contact 1.</p>
+      <uswds-button
+        aria-controls="contact-menu"
+        aria-describedby="details"
+        aria-expanded="true"
+        aria-haspopup="menu"
+        aria-pressed="false"
+        button-label="Remove contact 1"
+        name="action"
+        title="Remove this contact"
+        value="remove"
+      >Remove</uswds-button>
     `;
 
     const element = document.querySelector('uswds-button')!;
     await updateComplete(element);
 
+    const button = element.shadowRoot!.querySelector('button')!;
     expect(element).not.toHaveAttribute('aria-label');
-    expect(element.shadowRoot!.querySelector('button')).toHaveAccessibleName('Remove contact 1');
+    expect(button).toHaveAccessibleName('Remove contact 1');
+    expect(button).toHaveAttribute('aria-controls', 'contact-menu');
+    expect(button).toHaveAttribute('aria-describedby', 'details');
+    expect(button).toHaveAttribute('aria-expanded', 'true');
+    expect(button).toHaveAttribute('aria-haspopup', 'menu');
+    expect(button).toHaveAttribute('aria-pressed', 'false');
+    expect(button).toHaveAttribute('name', 'action');
+    expect(button).toHaveAttribute('title', 'Remove this contact');
+    expect(button).toHaveAttribute('value', 'remove');
   });
 
   it('bridges type=submit to the containing form exactly once', async () => {
@@ -63,6 +85,27 @@ describe('uswds-button', () => {
     element.shadowRoot!.querySelector('button')!.click();
 
     expect(onSubmit).toHaveBeenCalledOnce();
+  });
+
+  it('documents that bridged submit does not expose a native submitter', async () => {
+    let submitter: SubmitEvent['submitter'] | undefined = undefined;
+    document.body.innerHTML = `
+      <form>
+        <uswds-button type="submit" name="intent" value="save">Submit</uswds-button>
+      </form>
+    `;
+
+    const form = document.querySelector('form')!;
+    const element = document.querySelector('uswds-button')!;
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+      submitter = event.submitter;
+    });
+    await updateComplete(element);
+
+    element.shadowRoot!.querySelector('button')!.click();
+
+    expect(submitter).toBeNull();
   });
 
   it('does not submit the form for type=button', async () => {
