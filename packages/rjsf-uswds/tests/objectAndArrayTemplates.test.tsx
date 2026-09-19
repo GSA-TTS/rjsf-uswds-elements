@@ -4,6 +4,15 @@ import userEvent from '@testing-library/user-event';
 import type { RJSFSchema } from '@rjsf/utils';
 import { renderForm } from './helpers';
 
+const updateComplete = (element: Element) =>
+  (element as HTMLElement & { updateComplete: Promise<unknown> }).updateComplete;
+
+async function shadowButton(selector: string) {
+  const host = document.querySelector(selector)!;
+  await updateComplete(host);
+  return host.shadowRoot!.querySelector('button')!;
+}
+
 describe('ObjectFieldTemplate', () => {
   it('renders titled objects as fieldsets with legends and descriptions', () => {
     renderForm({
@@ -74,19 +83,19 @@ describe('ArrayFieldTemplate', () => {
 
   it('derives human-friendly add button labels from the item title', async () => {
     renderForm(contactsSchema);
-    expect(screen.getByRole('button', { name: 'Add contact' })).toBeInTheDocument();
+    expect(await shadowButton('#root_contacts__add')).toHaveAccessibleName('Add contact');
   });
 
   it('numbers repeated object entries and supports add/remove', async () => {
     const user = userEvent.setup();
     renderForm(contactsSchema, { formData: { contacts: [{ name: 'A' }] } });
     expect(screen.getByRole('group', { name: 'Contact 1' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'Add another contact' })).toBeInTheDocument();
+    expect(await shadowButton('#root_contacts__add')).toHaveAccessibleName('Add another contact');
 
-    await user.click(screen.getByRole('button', { name: 'Add another contact' }));
+    await user.click(await shadowButton('#root_contacts__add'));
     expect(screen.getByRole('group', { name: 'Contact 2' })).toBeInTheDocument();
 
-    await user.click(screen.getByRole('button', { name: 'Remove contact 2' }));
+    await user.click(await shadowButton('#root_contacts_1__remove'));
     expect(screen.queryByRole('group', { name: 'Contact 2' })).toBeNull();
   });
 
@@ -97,9 +106,10 @@ describe('ArrayFieldTemplate', () => {
       formData: { contacts: [{ name: 'First' }, { name: 'Second' }] },
       formProps: { onChange },
     });
-    const moveUpFirst = screen.getByRole('button', { name: 'Move contact 1 up' });
+    const moveUpFirst = await shadowButton('#root_contacts_0__moveUp');
+    expect(moveUpFirst).toHaveAccessibleName('Move contact 1 up');
     expect(moveUpFirst).toBeDisabled();
-    await user.click(screen.getByRole('button', { name: 'Move contact 1 down' }));
+    await user.click(await shadowButton('#root_contacts_0__moveDown'));
     expect(onChange.mock.calls.at(-1)?.[0].formData.contacts).toEqual([
       { name: 'Second' },
       { name: 'First' },
@@ -118,9 +128,9 @@ describe('ArrayFieldTemplate', () => {
         },
       },
     });
-    await user.click(screen.getByRole('button', { name: 'Add keyword' }));
-    expect(screen.getByRole('button', { name: 'Remove keyword 1' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Remove keyword 1' }));
-    expect(screen.queryByRole('button', { name: 'Remove keyword 1' })).toBeNull();
+    await user.click(await shadowButton('#root_keywords__add'));
+    expect(await shadowButton('#root_keywords_0__remove')).toHaveAccessibleName('Remove keyword 1');
+    await user.click(await shadowButton('#root_keywords_0__remove'));
+    expect(document.querySelector('#root_keywords_0__remove')).toBeNull();
   });
 });
