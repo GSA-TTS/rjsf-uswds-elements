@@ -22,9 +22,7 @@ describe('uswds-alert', () => {
     expect(alert).toHaveClass('usa-alert', 'usa-alert--success', 'usa-alert--slim');
     expect(alert).toHaveClass('usa-alert--no-icon');
     expect(element.shadowRoot!.querySelector('[part="body"]')).toHaveClass('usa-alert__body');
-    expect(element.shadowRoot!.querySelector('[part="heading"]')).toHaveClass(
-      'usa-alert__heading',
-    );
+    expect(element.shadowRoot!.querySelector('[part="heading"]')).toHaveClass('usa-alert__heading');
     expect(element.shadowRoot!.querySelector('[part="heading"]')).toHaveTextContent(
       'Application submitted',
     );

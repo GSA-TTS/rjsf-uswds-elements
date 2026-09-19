@@ -288,9 +288,7 @@ export default function ComponentGallery() {
             <uswds-alert type="error" heading="This form has 2 errors">
               <ul>
                 <li>
-                  <a href="#component-gallery-alert-example">
-                    Project name: Enter a project name.
-                  </a>
+                  <a href="#component-gallery-alert-example">Project name: Enter a project name.</a>
                 </li>
                 <li>Lead agency: Select a lead agency.</li>
               </ul>
