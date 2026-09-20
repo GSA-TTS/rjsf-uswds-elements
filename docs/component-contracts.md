@@ -18,6 +18,87 @@ Every component must document and test:
 
 Components should prefer native HTML controls and platform behavior. Custom keyboard behavior should only be added when a native control cannot satisfy the USWDS pattern.
 
+## New Component Gate
+
+Before implementation, classify the component:
+
+- **Self-contained display**: owns its content semantics and does not participate in form submission, label, hint, or error relationships.
+- **Field primitive**: label, hint, error, required marker, or any component that participates in `for`, `aria-labelledby`, `aria-describedby`, invalid state, or dynamic field errors.
+- **Native form control**: replaces or wraps an input, select, textarea, checkbox, radio, or other value-owning control.
+- **Submit/reset control**: triggers form submission or reset behavior.
+- **Composite/slotted interactive component**: contains or slots links, buttons, controls, menu items, or other focusable children.
+
+Answer this before code review: what is the accessible, user-facing element, and where do its role, name, description, state, keyboard behavior, and form behavior actually live?
+
+## Contract Template
+
+Use this template when adding or materially changing a component:
+
+```md
+### `uswds-example`
+
+Purpose: what USWDS pattern this component represents and what consumers should use it for.
+
+Classification: self-contained display | field primitive | native form control | submit/reset control | composite/slotted interactive component.
+
+Rendering model: shadow DOM | light DOM | hybrid, with rationale.
+
+Markup contract:
+
+\```html
+<uswds-example attribute="value">Visible content</uswds-example>
+\```
+
+Component-owned USWDS markup: list the USWDS classes/elements the component emits itself.
+
+Shadow/light DOM contract: show the internal rendered structure or the light-DOM ownership model.
+
+Attributes and properties: list supported public API values, defaults, reflection behavior, and invalid-value fallback.
+
+Slots: list every slot, expected content, and whether slotted interactive content is supported.
+
+Events: list emitted events, `detail` payloads, bubbling/composed behavior, and cancelability.
+
+Forwarded attributes: list supported accessibility, global, and form attributes that are forwarded to an internal accessible control. List unsupported native attributes explicitly.
+
+Accessibility contract: role, accessible name source, accessible description source, state attributes, disabled/readonly behavior, focus behavior, and live-region behavior when applicable.
+
+Keyboard contract: Tab order, activation keys, arrow-key behavior if applicable, Escape behavior if applicable, and disabled-control behavior.
+
+Native semantic parity target: native element or USWDS pattern being matched. If parity is partial, list the missing native features.
+
+Known limitations and non-goals: include any behavior consumers might reasonably expect but should not rely on.
+
+Required tests: unit/jsdom tests, Playwright/browser tests, axe checks, and any required regression cases.
+
+Residual manual AT checks: screen reader/browser combinations and user flows that automation cannot prove.
+\```
+
+## Testing Requirements
+
+Use unit/jsdom tests for reflection, DOM shape, class generation, attribute forwarding, invalid-value fallback, and small behavior contracts.
+
+Use Playwright/browser tests for user-facing accessibility and platform behavior:
+
+- accessible role/name/description queries;
+- sequential focus order and focus visibility;
+- keyboard activation, including `Enter` and `Space` where native controls support both;
+- disabled controls being skipped or blocked as native semantics require;
+- shadow-DOM accessibility exposure;
+- form submission, reset, validation, and submitted data behavior;
+- slotted interactive content discoverability and keyboard operation;
+- error-summary links moving focus to invalid fields.
+
+Axe checks are required but not sufficient. A passing axe result does not prove keyboard behavior, focus movement, accessible names, live-region announcements, submitted data, or screen-reader announcement quality.
+
+Spikes may justify an implementation direction, but every production component still needs direct production tests for the behavior it relies on.
+
+## ARIA And Attribute Forwarding
+
+Never emit empty ARIA attributes. Only render `aria-*` when the value is meaningful.
+
+Do not spread native control props blindly onto a custom-element host. If the accessible control is inside shadow DOM, explicitly forward supported accessibility, global, and form attributes to that internal control, and document unsupported attributes.
+
 ## Rendering Model
 
 USWDS now publishes Web Components from the main `uswds/uswds` repository rather than the separate `uswds-elements` repository. The current upstream reference is `usa-banner`, which uses Lit, shadow DOM, a Vite library build, `*.scss?inline` and `*.css?inline` style imports, `:host`, `part`, slots, and CSS custom properties.
