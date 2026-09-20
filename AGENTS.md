@@ -1,5 +1,23 @@
 # AGENTS.md
 
+## Web Component Implementation Gate
+
+Before implementing or modifying a `uswds-form-elements` Web Component or its RJSF adapter, do this gate first and reflect the result in the PR description:
+
+- Classify the component as one of: self-contained display, field primitive, native form control, submit/reset control, or composite/slotted interactive component.
+- Update `docs/component-contracts.md` before or with the implementation. The contract must define public API, rendering model, component-owned USWDS markup, slots, events, forwarded attributes, accessibility contract, keyboard contract, native semantic parity target, known limitations, required tests, and residual manual assistive-technology checks.
+- The Web Component must own the USWDS pattern markup it represents. The React/RJSF adapter should pass state through attributes, properties, slots, and events; it must not keep authoring internal USWDS classes and wrap them in a custom-element host.
+- Do not spread native control props blindly onto a custom-element host. If the accessible control is inside shadow DOM, explicitly forward the supported accessibility, global, and form attributes to that internal control, and document unsupported attributes.
+- Never emit empty ARIA attributes. Only render ARIA when it has a meaningful value.
+- If replacing or wrapping a native control, document and test semantic parity: role, accessible name, description, state, disabled behavior, focus order, keyboard activation, form behavior, submitted data, and unsupported native features.
+- Spikes may justify an implementation direction, but production components still need direct production tests.
+
+Required test split for accessibility-sensitive component work:
+
+- Use unit/jsdom tests for reflection, DOM shape, class generation, attribute forwarding, and small behavior contracts.
+- Use Playwright/browser tests for accessible role/name queries, keyboard behavior, focus behavior, shadow-DOM accessibility exposure, form submission/reset behavior, and slotted interactive content.
+- Axe checks are required but not sufficient; add explicit user-facing assertions and list residual manual AT testing where shadow DOM, live regions, alerts, or form controls are involved.
+
 ## Playwright In Sandboxes
 
 The workbench accessibility smoke tests and shadow-DOM form accessibility spike use Playwright Chromium via `npm run test:a11y`. Run this check locally by default before declaring accessibility-sensitive work complete.
