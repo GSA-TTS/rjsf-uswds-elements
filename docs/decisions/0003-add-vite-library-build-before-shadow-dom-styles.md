@@ -64,5 +64,5 @@ Chosen option: **Add a Vite/Rollup library build for `uswds-form-elements` befor
 - CSS build-path spike: https://github.com/GSA-TTS/pic-blm-cxworks/issues/1146
 - USWDS Web Components direction: https://github.com/uswds/uswds/discussions/6477#discussioncomment-13248225
 - USWDS `usa-banner` source: https://github.com/uswds/uswds/blob/develop/packages/usa-banner/src/usa-banner.component.js
-- ADR-0004: 0004-target-uswds-web-component-conventions-pending-form-accessibility-validation.md
+- ADR-0004: 0004-target-uswds-web-component-conventions-after-form-accessibility-validation.md
 - `@uswds/compile`: https://github.com/uswds/uswds-compile

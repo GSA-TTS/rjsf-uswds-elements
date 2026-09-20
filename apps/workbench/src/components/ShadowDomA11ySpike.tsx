@@ -110,10 +110,10 @@ export default function ShadowDomA11ySpike() {
   return (
     <div className="wb-spike" data-spike-page="shadow-dom-a11y">
       <div className="wb-spike__intro">
-        <h2>Shadow DOM form accessibility spike</h2>
+        <h2>Shadow DOM form accessibility regression fixtures</h2>
         <p>
-          These fixtures test whether RJSF-style form fields can safely use shadow DOM for labels,
-          hints, and errors without breaking accessible descriptions.
+          These retained fixtures document that split shadow-DOM labels, hints, and errors are not
+          safe for RJSF-composed form fields under the tested browser topology.
         </p>
         <p>
           Browser support detected for <code>HTMLInputElement.ariaDescribedByElements</code>:{' '}

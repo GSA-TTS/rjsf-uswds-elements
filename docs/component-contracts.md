@@ -110,7 +110,7 @@ Current production form primitives remain light DOM under ADR-0002 because:
 - RJSF composes labels, hints, errors, and controls from separate templates and widgets;
 - classic `aria-describedby`, `aria-labelledby`, and label `for` references do not reliably cross shadow-root boundaries;
 - browser form semantics, labels, and accessibility relationships are easier to verify in the same DOM tree;
-- issue #4 must validate browser and assistive-technology behavior before production form primitives move to shadow DOM.
+- issue #4 / PR #5 rejected split cross-shadow form-field semantics for production use.
 
 The package build supports `*.css?inline` and `*.scss?inline` imports for future shadow-DOM work. The package Vite config resolves USWDS Sass through `node_modules/@uswds/uswds/packages` and the USWDS package root. Inline USWDS Sass can emit `@font-face` rules with relative font URLs; consumers are responsible for serving or rewriting those assets if a future component inlines styles that reference them.
 
@@ -121,6 +121,16 @@ The package build supports `*.css?inline` and `*.scss?inline` imports for future
 The adapter should translate RJSF state into custom-element attributes, properties, slots, and events. It should not continue to author a component's internal USWDS pattern markup and then wrap that markup in a custom-element host. A wrapper-only element that leaves consumers responsible for internal classes such as `usa-alert__body`, `usa-alert__heading`, or `usa-button` is not a successful migration.
 
 React 19 is the baseline for direct custom-element interop. If React 18 support becomes necessary, add an explicit compatibility layer or wrapper entry point with tests rather than widening the peer range without evidence.
+
+## Revisiting Completed Components
+
+The issue #4 / PR #5 outcome does not require reimplementing current completed components because they do not depend on the rejected topology: a light-DOM form control consuming label, hint, or error semantics from separate shadow-root nodes.
+
+- `uswds-required-marker` and `uswds-error-message` keep field semantics in light DOM.
+- `uswds-alert` uses a shadow-owned shell for a self-contained alert while keeping error-summary links slotted and focusable.
+- `uswds-button` uses a separately validated submit/reset/action topology for the current RJSF use case.
+
+Revisit `uswds-button` only if consumers need full native submit-button parity, such as `SubmitEvent.submitter`, submitted host `name`/`value`, out-of-tree `form="id"`, or alternate submit attributes like `formaction` / `formmethod`.
 
 ## Current Components
 
@@ -215,7 +225,7 @@ Accessibility contract: the marker uses `abbr[title="required"]`, matching the U
 
 USWDS pattern reference: form labels and required field indicators.
 
-Upstreaming note: this is intentionally tiny and low-risk. It is useful mainly as the first proof that the RJSF theme can consume Web Components while preserving existing accessibility tests and global USWDS styling. Any future shadow-DOM version should wait for issue #4.
+Upstreaming note: this is intentionally tiny and low-risk. It is useful mainly as proof that the RJSF theme can consume Web Components while preserving existing accessibility tests and global USWDS styling. Keep required-marker semantics in the same DOM tree as labels and legends unless new evidence supersedes the issue #4 / PR #5 findings.
 
 ### `uswds-error-message`
 
@@ -239,4 +249,4 @@ Accessibility contract: field controls continue to reference the field-error con
 
 USWDS pattern reference: form error messages.
 
-Upstreaming note: this remains a narrow presentational wrapper so the RJSF adapter can adopt Web Components incrementally without changing validation behavior or field-error associations. Any future shadow-DOM version should wait for issue #4 because error descriptions are central to the cross-boundary accessibility question.
+Upstreaming note: this remains a narrow presentational wrapper so the RJSF adapter can adopt Web Components incrementally without changing validation behavior or field-error associations. Keep field-error descriptions in the same DOM tree as controls unless new evidence supersedes the issue #4 / PR #5 findings.

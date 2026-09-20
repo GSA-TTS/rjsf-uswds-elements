@@ -45,7 +45,7 @@ Axe checks and unit tests are not substitutes for this review. Spikes may justif
 
 ## Playwright In Sandboxes
 
-The workbench accessibility smoke tests and shadow-DOM form accessibility spike use Playwright Chromium via `npm run test:a11y`. Run this check locally by default before declaring accessibility-sensitive work complete.
+The workbench accessibility smoke tests and retained shadow-DOM form accessibility regression fixtures use Playwright Chromium via `npm run test:a11y`. Run this check locally by default before declaring accessibility-sensitive work complete.
 
 If Playwright browsers are missing, install Chromium with:
 

@@ -36,7 +36,7 @@ export default function App() {
             aria-pressed={view === 'shadow-dom-spike'}
             onClick={() => setView('shadow-dom-spike')}
           >
-            Shadow DOM a11y spike
+            Shadow DOM a11y fixtures
           </button>
           <button
             type="button"

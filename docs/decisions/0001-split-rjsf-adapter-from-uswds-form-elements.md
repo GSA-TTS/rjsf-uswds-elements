@@ -57,5 +57,5 @@ Chosen option: **Split adapter and form elements packages**, because it keeps fr
 - Parent work: https://github.com/GSA-TTS/pic-blm-cxworks/issues/969
 - Initial implementation PR: https://github.com/GSA-TTS/rjsf-uswds-elements/pull/1
 - USWDS Web Components direction: https://github.com/uswds/uswds/discussions/6477#discussioncomment-13248225
-- ADR-0004: 0004-target-uswds-web-component-conventions-pending-form-accessibility-validation.md
+- ADR-0004: 0004-target-uswds-web-component-conventions-after-form-accessibility-validation.md
 - Component contracts: ../component-contracts.md
