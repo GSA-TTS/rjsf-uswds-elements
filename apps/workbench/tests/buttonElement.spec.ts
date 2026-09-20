@@ -1,4 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
+import { expectTabOrder } from './helpers/accessibility';
 
 async function openGallery(page: Page) {
   await page.goto('/');
@@ -75,14 +76,12 @@ test.describe('uswds-button', () => {
     await expect(page.getByText('Production submit count: 3')).toBeVisible();
 
     await page.getByRole('link', { name: 'Before production buttons' }).focus();
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('button', { name: 'Submit production form' })).toBeFocused();
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('button', { name: 'Non-submit production button' })).toBeFocused();
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('button', { name: 'Reset production form' })).toBeFocused();
-    await page.keyboard.press('Tab');
-    await expect(page.getByRole('link', { name: 'After production buttons' })).toBeFocused();
+    await expectTabOrder(page, [
+      page.getByRole('button', { name: 'Submit production form' }),
+      page.getByRole('button', { name: 'Non-submit production button' }),
+      page.getByRole('button', { name: 'Reset production form' }),
+      page.getByRole('link', { name: 'After production buttons' }),
+    ]);
   });
 
   test('RJSF submit button submits from the custom element', async ({ page }) => {
