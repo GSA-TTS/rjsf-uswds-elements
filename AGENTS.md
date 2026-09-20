@@ -18,6 +18,31 @@ Required test split for accessibility-sensitive component work:
 - Use Playwright/browser tests for accessible role/name queries, keyboard behavior, focus behavior, shadow-DOM accessibility exposure, form submission/reset behavior, and slotted interactive content.
 - Axe checks are required but not sufficient; add explicit user-facing assertions and list residual manual AT testing where shadow DOM, live regions, alerts, or form controls are involved.
 
+## Adversarial Frontend Review Gate
+
+Before declaring accessibility-sensitive Web Component or RJSF adapter work complete, run two adversarial review passes, preferably with separate sub-agents:
+
+- Frontend test-engineer review: critique whether tests prove the intended user-facing behavior. Look for brittle selectors, overfitting to implementation details, missing regression cases, missing browser coverage, and behavior incorrectly tested only in jsdom.
+- Frontend accessibility-specialist review: critique role, accessible name, description, state, focus behavior, keyboard behavior, ARIA correctness, shadow-DOM exposure, slotted interactive content, form behavior, and native semantic parity.
+
+This gate is required for:
+
+- new or materially changed `uswds-form-elements` Web Components;
+- RJSF adapter changes that consume Web Components;
+- shadow DOM;
+- slotted interactive content;
+- form controls or submit/reset controls;
+- alerts, live regions, ARIA, or keyboard/focus behavior.
+
+For each review:
+
+- record findings with file/line references where possible;
+- fix actionable findings before declaring done;
+- document intentional limitations or deferred manual AT checks in the PR;
+- update tests when findings reveal missing coverage.
+
+Axe checks and unit tests are not substitutes for this review. Spikes may justify direction, but production components still require direct production tests and adversarial review.
+
 ## Playwright In Sandboxes
 
 The workbench accessibility smoke tests and shadow-DOM form accessibility spike use Playwright Chromium via `npm run test:a11y`. Run this check locally by default before declaring accessibility-sensitive work complete.

@@ -22,6 +22,8 @@ Complete this section for `uswds-form-elements` Web Component or RJSF adapter ch
 - Slotted interactive content is covered by Playwright/browser tests when slots contain links, buttons, or controls.
 - Native form-control or submit/reset parity is documented and tested, or limitations are explicitly documented.
 - Axe checks are included, but explicit user-facing assertions are also present.
+- Adversarial frontend test-engineer review completed; findings addressed or documented.
+- Adversarial frontend accessibility-specialist review completed; findings addressed or documented.
 - Residual manual assistive-technology checks are listed for shadow DOM, live regions, alerts, or form controls.
 
 ## Verification
