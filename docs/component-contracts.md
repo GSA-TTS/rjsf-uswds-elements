@@ -34,7 +34,7 @@ Answer this before code review: what is the accessible, user-facing element, and
 
 Use this template when adding or materially changing a component:
 
-```md
+````md
 ### `uswds-example`
 
 Purpose: what USWDS pattern this component represents and what consumers should use it for.
@@ -137,6 +137,7 @@ Markup contract:
   </ul>
 </uswds-alert>
 ```
+````
 
 Shadow DOM contract:
 
