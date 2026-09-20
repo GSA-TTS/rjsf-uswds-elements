@@ -41,6 +41,40 @@ Lit-based USWDS form Web Components
 USWDS classes + consumer-provided USWDS CSS
 ```
 
+## Theme Sub-Part Status
+
+This matrix tracks which parts of the RJSF theme have moved behind `uswds-form-elements` Web Components. It is intentionally compact: detailed contracts live in `docs/component-contracts.md`.
+
+Legend:
+
+- Status: ✅ componentized, 🟨 partially componentized, ⬜ React/RJSF-owned.
+- DOM: ☀️ light DOM, 🌑 shadow DOM, 🌓 mixed light/shadow.
+- A11y gate: ✅ automated browser coverage in place, 🧪 gated by spike/manual evidence, 🧐 residual manual AT checks noted.
+
+| Theme area                                                                              | Status | Element                                                                      | DOM | A11y | Notes                                                                                     |
+| --------------------------------------------------------------------------------------- | ------ | ---------------------------------------------------------------------------- | --- | ---- | ----------------------------------------------------------------------------------------- |
+| [Error summary](packages/rjsf-uswds/src/templates/ErrorListTemplate.tsx)                | ✅     | [`uswds-alert`](docs/component-contracts.md#uswds-alert)                     | 🌓  | 🧐   | Shadow-owned alert shell; slotted links remain focusable; manual AT checks remain.        |
+| [Field error](packages/rjsf-uswds/src/templates/FieldErrorTemplate.tsx)                 | ✅     | [`uswds-error-message`](docs/component-contracts.md#uswds-error-message)     | ☀️  | ✅   | Light-DOM shell; RJSF keeps the described-by container ID.                                |
+| [Required marker](packages/rjsf-uswds/src/uswds/elements.tsx)                           | ✅     | [`uswds-required-marker`](docs/component-contracts.md#uswds-required-marker) | ☀️  | ✅   | Light-DOM field primitive; preserves required-marker semantics.                           |
+| [Submit/action buttons](packages/rjsf-uswds/src/templates/ButtonTemplates.tsx)          | ✅     | [`uswds-button`](docs/component-contracts.md#uswds-button)                   | 🌑  | 🧐   | RJSF submit/reset/action use cases covered; full native submitter parity not implemented. |
+| [Additional properties](packages/rjsf-uswds/src/templates/WrapIfAdditionalTemplate.tsx) | 🟨     | [`uswds-button` remove](docs/component-contracts.md#uswds-button)            | 🌓  | ✅   | Key input and layout remain React-owned; remove action uses `uswds-button`.               |
+| [Array sections/items](packages/rjsf-uswds/src/templates/ArrayFieldTemplate.tsx)        | 🟨     | [`uswds-button` actions](docs/component-contracts.md#uswds-button)           | 🌓  | ✅   | Repeatable layout remains React-owned; add/remove/move/copy actions use `uswds-button`.   |
+| [Object sections](packages/rjsf-uswds/src/templates/ObjectFieldTemplate.tsx)            | 🟨     | [`uswds-button` actions](docs/component-contracts.md#uswds-button)           | 🌓  | ✅   | Section layout remains React-owned; add-property action uses `uswds-button`.              |
+| [Label](packages/rjsf-uswds/src/uswds/elements.tsx)                                     | ⬜     | None                                                                         | ☀️  | 🧪   | Still React-owned; likely next field primitive after form semantics are validated.        |
+| [Description / hint](packages/rjsf-uswds/src/templates/DescriptionFieldTemplate.tsx)    | ⬜     | None                                                                         | ☀️  | 🧪   | Still React-owned `aria-describedby` target; keep same-tree with controls.                |
+| [Field help](packages/rjsf-uswds/src/templates/FieldHelpTemplate.tsx)                   | ⬜     | None                                                                         | ☀️  | 🧪   | Still React-owned `aria-describedby` target; same constraints as hints.                   |
+| [Field layout](packages/rjsf-uswds/src/templates/FieldTemplate.tsx)                     | ⬜     | None                                                                         | ☀️  | 🧪   | Still React-owned; coordinates label, hint, error, and control placement.                 |
+| [Choice helper](packages/rjsf-uswds/src/uswds/elements.tsx)                             | ⬜     | None                                                                         | ☀️  | 🧪   | Still React-owned checkbox/radio helper; blocked on label/control semantics evidence.     |
+| [Checkbox](packages/rjsf-uswds/src/widgets/CheckboxWidget.tsx)                          | ⬜     | None                                                                         | ☀️  | 🧪   | Still native light-DOM control; label and description stay same-tree.                     |
+| [Checkbox group](packages/rjsf-uswds/src/widgets/CheckboxesWidget.tsx)                  | ⬜     | None                                                                         | ☀️  | 🧪   | Still native light-DOM controls; group semantics come from fieldset/legend.               |
+| [Radio group](packages/rjsf-uswds/src/widgets/RadioWidget.tsx)                          | ⬜     | None                                                                         | ☀️  | 🧪   | Still native light-DOM controls; group semantics come from fieldset/legend.               |
+| [Text-like inputs](packages/rjsf-uswds/src/templates/BaseInputTemplate.tsx)             | ⬜     | None                                                                         | ☀️  | 🧪   | Still native light-DOM controls; shadow DOM blocked pending field-semantics evidence.     |
+| [Textarea](packages/rjsf-uswds/src/widgets/TextareaWidget.tsx)                          | ⬜     | None                                                                         | ☀️  | 🧪   | Still native light-DOM control; shadow DOM blocked pending field-semantics evidence.      |
+| [Select](packages/rjsf-uswds/src/widgets/SelectWidget.tsx)                              | ⬜     | None                                                                         | ☀️  | 🧪   | Still native light-DOM control; multi-select defaults to checkbox group.                  |
+| [Prefix/suffix input group](packages/rjsf-uswds/src/uswds/elements.tsx)                 | ⬜     | None                                                                         | ☀️  | ✅   | Still React-owned presentational wrapper; prefix/suffix remain `aria-hidden`.             |
+| [Standalone title](packages/rjsf-uswds/src/templates/TitleFieldTemplate.tsx)            | ⬜     | None                                                                         | ☀️  | ✅   | Still React-owned auxiliary `usa-legend` surface.                                         |
+| [Form wrapper](packages/rjsf-uswds/src/Form.tsx)                                        | ⬜     | None                                                                         | ☀️  | ✅   | Still React-owned form class wrapper; not a Web Component target by itself.               |
+
 ## Development
 
 ```bash
@@ -53,7 +87,7 @@ Useful scripts:
 
 - `npm run dev` starts the workbench.
 - `npm test` runs unit, integration, and axe tests in Vitest/jsdom.
-- `npm run test:a11y` runs Playwright axe smoke tests and the shadow-DOM form accessibility spike against the workbench in Chromium.
+- `npm run test:a11y` runs Playwright axe smoke tests and the retained shadow-DOM form accessibility regression fixtures against the workbench in Chromium.
 - `npm run build` builds the Web Components package, RJSF package, and workbench.
 - `npm run check` runs formatting, linting, typechecking, tests, build, and workbench accessibility checks.
 
@@ -65,7 +99,7 @@ Accessibility is a release gate for this repository. CI runs:
 - TypeScript checks for each package;
 - unit and integration tests;
 - existing `jest-axe` tests for rendered RJSF forms;
-- Playwright + axe smoke tests for the playground, component gallery, and shadow-DOM accessibility spike;
+- Playwright + axe smoke tests for the playground, component gallery, and retained shadow-DOM accessibility regression fixtures;
 - browser-backed assertions that Chromium does not accept the cross-shadow element-reference topology for form descriptions;
 - package and workbench builds.
 
@@ -88,7 +122,7 @@ USWDS now publishes Web Components from the main `uswds/uswds` repository rather
 
 `packages/uswds-form-elements` uses a Vite library build so future Lit components can follow that `usa-banner` pattern when shadow DOM styling is appropriate. The package still emits TypeScript declarations with `tsc --emitDeclarationOnly`.
 
-Current production form primitives remain light DOM under ADR-0002 until spike issue #4 validates that a shadow-DOM variant preserves labels, descriptions, errors, form behavior, keyboard behavior, and dynamic error announcements with browser-backed tests and manual assistive-technology evidence.
+Current production form primitives remain light DOM under ADR-0002 because issue #4 / PR #5 rejected split cross-shadow form-field semantics for RJSF-composed labels, descriptions, errors, controls, focus behavior, and dynamic error updates.
 
 The Vite Sass configuration resolves USWDS package Sass from `node_modules/@uswds/uswds/packages` and the package root so imports such as `@use "usa-error-message";` match USWDS package boundaries. Inline USWDS Sass may include `@font-face` URLs; Vite leaves unresolved relative font URLs in the emitted CSS string for the consuming application to serve or rewrite.
 
@@ -102,8 +136,6 @@ Each Web Component should document:
 - USWDS pattern reference;
 - known limitations;
 - upstreaming notes for possible `uswds/uswds` contribution.
-
-Current migrated components include `uswds-required-marker` and `uswds-error-message`, used by the RJSF theme for required field indicators and field-level error messages.
 
 ## Workbench
 

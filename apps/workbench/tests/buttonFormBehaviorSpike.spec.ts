@@ -1,5 +1,5 @@
 import { expect, test, type Locator, type Page } from '@playwright/test';
-import AxeBuilder from '@axe-core/playwright';
+import { expectNoAxeViolations } from './helpers/accessibility';
 
 async function openSpike(page: Page) {
   await page.goto('/');
@@ -15,11 +15,7 @@ test.describe('button form behavior spike', () => {
   test('fixtures have no automated WCAG A/AA axe violations', async ({ page }) => {
     await openSpike(page);
 
-    const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
-      .analyze();
-
-    expect(results.violations).toEqual([]);
+    await expectNoAxeViolations(page, 'button form behavior spike');
   });
 
   test('shadow DOM owned submit requests the containing form exactly once', async ({ page }) => {

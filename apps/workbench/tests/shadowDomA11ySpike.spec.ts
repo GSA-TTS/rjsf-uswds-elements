@@ -1,17 +1,17 @@
 import { expect, test, type Page } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
 
-async function openSpike(page: Page) {
+async function openFixtures(page: Page) {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Shadow DOM a11y spike' }).click();
+  await page.getByRole('button', { name: 'Shadow DOM a11y fixtures' }).click();
   await expect(
-    page.getByRole('heading', { name: 'Shadow DOM form accessibility spike' }),
+    page.getByRole('heading', { name: 'Shadow DOM form accessibility regression fixtures' }),
   ).toBeVisible();
 }
 
-test.describe('shadow DOM form accessibility spike', () => {
+test.describe('shadow DOM form accessibility regression fixtures', () => {
   test('fixtures have no automated WCAG A/AA axe violations', async ({ page }) => {
-    await openSpike(page);
+    await openFixtures(page);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa', 'wcag21a', 'wcag21aa'])
@@ -21,7 +21,7 @@ test.describe('shadow DOM form accessibility spike', () => {
   });
 
   test('light-DOM baseline exposes the expected accessible description', async ({ page }) => {
-    await openSpike(page);
+    await openFixtures(page);
 
     const input = page.locator('#light-dom-input');
     await expect(input).toHaveAccessibleName('Email address');
@@ -32,7 +32,7 @@ test.describe('shadow DOM form accessibility spike', () => {
   });
 
   test('classic aria-describedby IDREFs do not cross into a shadow root', async ({ page }) => {
-    await openSpike(page);
+    await openFixtures(page);
 
     const input = page.locator('#classic-idref-shadow-input');
     await expect(input).toHaveAccessibleName('Email address');
@@ -44,7 +44,7 @@ test.describe('shadow DOM form accessibility spike', () => {
     page,
     browserName,
   }, testInfo) => {
-    await openSpike(page);
+    await openFixtures(page);
 
     const result = await page.evaluate(() => {
       const input = document.querySelector<
@@ -97,7 +97,7 @@ test.describe('shadow DOM form accessibility spike', () => {
   test('dynamic error updates are reflected in light DOM and shadow DOM fixtures', async ({
     page,
   }) => {
-    await openSpike(page);
+    await openFixtures(page);
 
     await page.getByRole('button', { name: 'Toggle error message' }).click();
 
@@ -127,7 +127,7 @@ test.describe('shadow DOM form accessibility spike', () => {
   });
 
   test('whole-field shadow root exposes internal accessible relationships', async ({ page }) => {
-    await openSpike(page);
+    await openFixtures(page);
 
     const result = await page.evaluate(() => {
       const host = document.querySelector<HTMLElement>('whole-field-shadow');
